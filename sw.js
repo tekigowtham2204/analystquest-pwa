@@ -1,4 +1,4 @@
-const CACHE = 'analystquest-v1';
+const CACHE = 'analystquest-v2';
 const ASSETS = [
   '/',
   '/index.html',
