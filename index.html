@@ -1,0 +1,1431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>AnalystQuest</title>
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#58CC02">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="application-name" content="AnalystQuest">
+
+<!-- iOS home screen -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AnalystQuest">
+<link rel="apple-touch-icon" href="icon-192.png">
+
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --g:#58CC02;--gd:#46A302;--gl:#D7FFB8;--gbg:#F7FFF0;
+  --b:#1CB0F6;--bd:#0099D9;--bl:#DDF4FF;--bb:#84D8FB;
+  --r:#FF4B4B;--rd:#EA2B2B;--rl:#FFE0E0;
+  --y:#FFD900;--yd:#E6C000;--yl:#FFF8C5;
+  --o:#FF9600;--od:#E08600;--ol:#FFF0D9;
+  --p:#CE82FF;--pd:#B05FE8;--pl:#F5E8FF;
+  --tx:#3C3C3C;--tm:#777;--tl:#AFAFAF;
+  --br:#E5E5E5;--bg:#F7F7F7;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased}
+html,body{height:100%;overflow:hidden;background:#131f2e;font-family:'Nunito',sans-serif;color:var(--tx)}
+#app{position:fixed;top:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;height:100%;background:#fff;overflow:hidden;display:flex;flex-direction:column}
+
+/* SCREENS */
+.sc{position:absolute;inset:0;display:flex;flex-direction:column;background:#fff;opacity:0;pointer-events:none;transition:opacity .15s;z-index:1}
+.sc.on{opacity:1;pointer-events:all;z-index:10}
+
+/* ── SPLASH ── */
+#s-splash{align-items:center;justify-content:center;padding:24px 28px;gap:0;background:#fff}
+.sp-owl{width:150px;height:150px;margin-bottom:4px;animation:owlBob 2.8s ease-in-out infinite}
+@keyframes owlBob{0%,100%{transform:translateY(0) rotate(-1.5deg)}50%{transform:translateY(-10px) rotate(1.5deg)}}
+.sp-title{font-size:36px;font-weight:900;color:var(--g);letter-spacing:-1px;margin-bottom:4px}
+.sp-sub{font-size:13.5px;font-weight:700;color:var(--tl);text-align:center;line-height:1.6;margin-bottom:20px;max-width:300px}
+.sp-input{width:88%;max-width:320px;padding:13px 16px;border:2.5px solid var(--br);border-radius:14px;font-family:'Nunito',sans-serif;font-size:16px;font-weight:700;color:var(--tx);outline:none;margin-bottom:18px;transition:border-color .15s}
+.sp-input:focus{border-color:var(--b)}
+.sp-chips{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-bottom:24px}
+.chip{border-radius:18px;font-size:11px;font-weight:900;padding:5px 13px;border:2px solid}
+.cg{color:#2e7d00;border-color:var(--g);background:#e8fcd4}
+.cb{color:#006eb3;border-color:var(--b);background:#ddf4ff}
+.co{color:#a05800;border-color:var(--o);background:#fff0d5}
+.cp{color:#7700bb;border-color:var(--p);background:#f5e8ff}
+
+/* ── BTN ── */
+.btn{width:88%;max-width:340px;padding:16px;border-radius:16px;font-family:'Nunito',sans-serif;font-size:16px;font-weight:900;letter-spacing:.3px;border:none;cursor:pointer;transition:transform .08s,filter .08s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn:active{transform:scale(.97)}
+.btn-g{background:var(--g);color:#fff;box-shadow:0 4px 0 var(--gd)}
+.btn-g:active{box-shadow:none;transform:translateY(4px)}
+.btn-b{background:var(--b);color:#fff;box-shadow:0 4px 0 var(--bd)}
+.btn-b:active{box-shadow:none;transform:translateY(4px)}
+.btn-r{background:var(--r);color:#fff;box-shadow:0 4px 0 var(--rd)}
+.btn-r:active{box-shadow:none;transform:translateY(4px)}
+.btn-out{background:#fff;color:var(--b);border:2.5px solid var(--b);box-shadow:0 4px 0 var(--bd)}
+.btn-out:active{box-shadow:none;transform:translateY(4px)}
+.btn-dis{background:#e5e5e5;color:#afafaf;box-shadow:0 4px 0 #ccc;cursor:not-allowed}
+
+/* ── MAIN SHELL ── */
+#s-main{flex-direction:column}
+.topbar{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:11px 14px 10px;border-bottom:2px solid var(--br);background:#fff}
+.tb-left{display:flex;align-items:center;gap:7px}
+.tb-logo-txt{font-size:18px;font-weight:900;color:var(--g);letter-spacing:-.5px}
+.tb-stats{display:flex;align-items:center;gap:11px}
+.tb-s{display:flex;align-items:center;gap:3px;font-size:15px;font-weight:900}
+.s-fire{color:#FF9600}.s-gem{color:#1CB0F6}.s-heart{color:#FF4B4B}
+.xp-bar-wrap{flex-shrink:0;padding:7px 16px 6px;background:#fff;border-bottom:1.5px solid var(--br)}
+.xp-bar-row{display:flex;justify-content:space-between;font-size:11px;font-weight:800;color:var(--tl);margin-bottom:4px}
+.xp-bar-bg{height:8px;background:var(--br);border-radius:8px;overflow:hidden}
+.xp-bar-fill{height:100%;background:var(--y);border-radius:8px;transition:width .6s cubic-bezier(.34,1.56,.64,1)}
+
+/* ── TABS ── */
+.tabs{flex-shrink:0;display:flex;border-top:2px solid var(--br);background:#fff}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 0 6px;cursor:pointer;color:var(--tl);font-size:10px;font-weight:800;gap:3px;transition:color .1s;border-top:3px solid transparent;margin-top:-2px}
+.tab.active{color:var(--b);border-top-color:var(--b)}
+.tab svg{transition:transform .15s}
+.tab.active svg{transform:scale(1.08)}
+
+/* ── SCROLL AREA ── */
+.scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
+.scroll::-webkit-scrollbar{display:none}
+
+/* ── LEARN TAB ── */
+.section-hdr{padding:14px 18px 10px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:5}
+.sec-badge{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.sec-info{flex:1}
+.sec-lbl{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;opacity:.7}
+.sec-name{font-size:15px;font-weight:900;line-height:1.25}
+.guide-btn{padding:7px 14px;border-radius:20px;border:2px solid;font-family:'Nunito',sans-serif;font-size:12px;font-weight:900;cursor:pointer;background:#fff;flex-shrink:0}
+
+.path{padding:10px 0 20px;position:relative}
+.path::before{content:'';position:absolute;left:50%;top:0;bottom:0;width:2px;background:var(--br);transform:translateX(-50%);z-index:0}
+
+.node-row{display:flex;justify-content:center;padding:6px 0;position:relative;z-index:1}
+.node-row.left{justify-content:flex-start;padding-left:60px}
+.node-row.right{justify-content:flex-end;padding-right:60px}
+
+.node-btn{width:70px;height:70px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;position:relative;transition:transform .12s;flex-shrink:0}
+.node-btn:active{transform:scale(.93)}
+.node-btn .nb-ico{font-size:28px;line-height:1}
+.node-btn .nb-chk{position:absolute;bottom:-2px;right:-2px;width:22px;height:22px;border-radius:50%;background:var(--g);border:2.5px solid #fff;display:flex;align-items:center;justify-content:center}
+.node-btn .nb-lock{position:absolute;inset:0;border-radius:50%;background:rgba(0,0,0,.18);display:flex;align-items:center;justify-content:center}
+.node-btn .nb-lbl{position:absolute;top:calc(100% + 6px);left:50%;transform:translateX(-50%);white-space:nowrap;font-size:11px;font-weight:800;color:var(--tm);max-width:90px;text-align:center;line-height:1.2}
+
+.milestone{display:flex;flex-direction:column;align-items:center;gap:6px;padding:18px 0;position:relative;z-index:1}
+.ms-ico{font-size:36px}
+.ms-lbl{font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.6px;color:var(--tl)}
+
+/* ── GUIDE SHEET ── */
+.bottom-sheet{position:absolute;inset:0;z-index:50;display:flex;flex-direction:column;justify-content:flex-end}
+.bs-bg{position:absolute;inset:0;background:rgba(0,0,0,.45);opacity:0;transition:opacity .25s}
+.bs-card{background:#fff;border-radius:22px 22px 0 0;padding:0 0 32px;max-height:78vh;display:flex;flex-direction:column;transform:translateY(100%);transition:transform .3s cubic-bezier(.34,1.1,.64,1)}
+.bs-handle{width:40px;height:4px;background:var(--br);border-radius:4px;margin:12px auto 0}
+.bs-scroll{overflow-y:auto;padding:18px 20px 8px}
+.bs-ttl{font-size:19px;font-weight:900;margin-bottom:5px}
+.bs-desc{font-size:14px;color:var(--tm);font-weight:600;line-height:1.55;margin-bottom:16px}
+.bs-node{display:flex;align-items:flex-start;gap:11px;padding:10px 0;border-bottom:1.5px solid var(--bg)}
+.bs-node:last-child{border-bottom:none}
+.bs-n-ico{font-size:22px;width:36px;height:36px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.bs-n-info{flex:1}
+.bs-n-name{font-size:14px;font-weight:800}
+.bs-n-topics{font-size:12px;color:var(--tm);font-weight:600;margin-top:2px}
+.bs-n-pills{display:flex;gap:5px;flex-wrap:wrap;margin-top:5px}
+.qt-pill{font-size:10px;font-weight:900;padding:3px 8px;border-radius:10px;text-transform:uppercase;letter-spacing:.3px}
+.bottom-sheet.open .bs-bg{opacity:1}
+.bottom-sheet.open .bs-card{transform:translateY(0)}
+
+/* ── LESSON SCREEN ── */
+#s-lesson{background:#fff;flex-direction:column}
+.les-top{display:flex;align-items:center;gap:10px;padding:14px 16px 10px;flex-shrink:0}
+.les-close{width:34px;height:34px;border-radius:50%;background:var(--bg);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.les-prog-bg{flex:1;height:14px;background:var(--br);border-radius:14px;overflow:hidden}
+.les-prog-fill{height:100%;background:var(--g);border-radius:14px;transition:width .5s cubic-bezier(.34,1.56,.64,1);min-width:0}
+.les-hearts{display:flex;align-items:center;gap:3px;font-size:15px;font-weight:900;color:var(--r);flex-shrink:0}
+.les-body{flex:1;overflow-y:auto;padding:20px 18px 10px;display:flex;flex-direction:column;gap:0}
+.q-type-tag{font-size:12px;font-weight:800;color:var(--tl);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px}
+.q-text{font-size:22px;font-weight:800;line-height:1.4;margin-bottom:20px;color:var(--tx)}
+.q-img{width:100%;border-radius:14px;margin-bottom:16px;max-height:160px;object-fit:cover}
+
+/* MCQ Options */
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{padding:14px 16px;border-radius:14px;border:2.5px solid var(--br);background:#fff;cursor:pointer;font-size:16px;font-weight:700;color:var(--tx);transition:border-color .1s,background .1s;text-align:left;display:flex;align-items:center;gap:11px;font-family:'Nunito',sans-serif}
+.opt .opt-key{width:28px;height:28px;border-radius:8px;border:2px solid var(--br);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;flex-shrink:0;transition:inherit}
+.opt.sel{border-color:var(--b);background:var(--bl)}
+.opt.sel .opt-key{border-color:var(--b);background:var(--b);color:#fff}
+.opt.correct{border-color:var(--g);background:var(--gl)}
+.opt.correct .opt-key{border-color:var(--g);background:var(--g);color:#fff}
+.opt.wrong{border-color:var(--r);background:var(--rl)}
+.opt.wrong .opt-key{border-color:var(--r);background:var(--r);color:#fff}
+
+/* TF */
+.tf-opts{display:flex;gap:12px}
+.tf-opt{flex:1;padding:22px 10px;border-radius:18px;border:2.5px solid var(--br);background:#fff;cursor:pointer;font-size:15px;font-weight:800;display:flex;flex-direction:column;align-items:center;gap:8px;font-family:'Nunito',sans-serif;transition:border-color .1s,background .1s}
+.tf-opt.sel{border-color:var(--b);background:var(--bl)}
+.tf-opt.correct{border-color:var(--g);background:var(--gl)}
+.tf-opt.wrong{border-color:var(--r);background:var(--rl)}
+.tf-ico{font-size:32px}
+
+/* BLANK */
+.blank-wrap{border-bottom:3px solid var(--tx);padding:4px 6px;display:inline-block;min-width:100px}
+.blank-input{border:none;outline:none;font-family:'Nunito',sans-serif;font-size:18px;font-weight:800;color:var(--b);background:transparent;width:120px}
+.hint-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.h-chip{padding:10px 16px;border-radius:10px;background:var(--bg);border:2px solid var(--br);font-size:15px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:background .1s,border-color .1s}
+.h-chip.used{opacity:.3;pointer-events:none}
+
+/* MATCH */
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.m-item{padding:12px 10px;border-radius:12px;border:2.5px solid var(--br);background:#fff;cursor:pointer;font-size:13px;font-weight:700;text-align:center;transition:border-color .1s,background .1s;min-height:50px;display:flex;align-items:center;justify-content:center}
+.m-item.sel{border-color:var(--b);background:var(--bl)}
+.m-item.matched{border-color:var(--g);background:var(--gl);pointer-events:none}
+.m-item.wrong-match{border-color:var(--r);background:var(--rl)}
+
+/* ARRANGE */
+.arr-target{min-height:54px;border:2.5px dashed var(--br);border-radius:12px;padding:6px;display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;transition:border-color .2s}
+.arr-target.has{border-color:var(--b)}
+.arr-bank{display:flex;flex-wrap:wrap;gap:8px}
+.arr-chip{padding:10px 14px;border-radius:10px;background:#fff;border:2.5px solid var(--br);font-size:14px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .1s}
+.arr-chip.placed{background:var(--bl);border-color:var(--b)}
+.arr-chip.in-target{background:var(--bl);border-color:var(--b)}
+.arr-chip.correct-pos{background:var(--gl);border-color:var(--g)}
+.arr-chip.wrong-pos{background:var(--rl);border-color:var(--r)}
+
+/* LES FOOTER */
+.les-foot{flex-shrink:0;padding:14px 18px;background:#fff;border-top:2px solid var(--br)}
+.les-foot.correct-bg{background:var(--gl);border-top-color:var(--g)}
+.les-foot.wrong-bg{background:var(--rl);border-top-color:var(--r)}
+.fb-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px}
+.fb-ico{font-size:26px;flex-shrink:0}
+.fb-texts .fb-lbl{font-size:16px;font-weight:900}
+.fb-texts .fb-exp{font-size:13.5px;font-weight:600;color:var(--tm);margin-top:2px;line-height:1.45}
+.foot-btn-row{display:flex;gap:10px}
+.foot-btn{flex:1;padding:15px;border-radius:14px;border:none;font-family:'Nunito',sans-serif;font-size:16px;font-weight:900;cursor:pointer;transition:transform .08s,box-shadow .08s}
+.foot-btn:active{transform:translateY(3px)}
+.fb-check{background:var(--g);color:#fff;box-shadow:0 4px 0 var(--gd)}
+.fb-check.dis{background:#e5e5e5;color:#afafaf;box-shadow:0 4px 0 #ccc;cursor:not-allowed}
+.fb-check.active{background:var(--g);color:#fff}
+.fb-check.red{background:var(--r);color:#fff;box-shadow:0 4px 0 var(--rd)}
+.fb-skip{background:#fff;color:var(--tm);border:2px solid var(--br);box-shadow:none;flex:none;padding:15px 18px}
+
+/* DONE SCREEN */
+#s-done{flex-direction:column;align-items:center;justify-content:center;padding:24px 28px;gap:0}
+.done-owl{width:120px;height:120px;margin-bottom:12px}
+.done-ttl{font-size:28px;font-weight:900;margin-bottom:6px;text-align:center}
+.done-sub{font-size:15px;color:var(--tm);font-weight:600;margin-bottom:24px;text-align:center}
+.done-stats{display:flex;gap:14px;margin-bottom:28px}
+.done-stat{display:flex;flex-direction:column;align-items:center;gap:4px;background:var(--bg);border-radius:14px;padding:14px 18px}
+.ds-val{font-size:24px;font-weight:900}
+.ds-lbl{font-size:11px;font-weight:800;color:var(--tl);text-transform:uppercase}
+
+/* FAIL SCREEN */
+#s-fail{flex-direction:column;align-items:center;justify-content:center;padding:28px;gap:14px}
+.fail-ico{font-size:64px}
+.fail-ttl{font-size:26px;font-weight:900;text-align:center;color:var(--r)}
+.fail-sub{font-size:15px;color:var(--tm);font-weight:600;text-align:center}
+
+/* RANK UP */
+#s-rankup{flex-direction:column;align-items:center;justify-content:center;padding:28px;gap:16px;background:linear-gradient(135deg,#1a1a2e 0%,#16213e 100%)}
+.ru-ring{width:150px;height:150px;border-radius:50%;background:linear-gradient(135deg,var(--y),var(--o));display:flex;align-items:center;justify-content:center;font-size:48px;animation:ringPop .6s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes ringPop{0%{transform:scale(0) rotate(-180deg)}100%{transform:scale(1) rotate(0)}}
+.ru-ttl{font-size:30px;font-weight:900;color:#fff;text-align:center}
+.ru-sub{font-size:15px;color:rgba(255,255,255,.7);font-weight:600;text-align:center}
+.ru-ds{font-size:20px;font-weight:900;color:var(--y);text-align:center}
+
+/* PRACTICE TAB */
+.prac-grid{padding:16px}
+.prac-sec{margin-bottom:20px}
+.prac-sec-title{font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:.7px;color:var(--tl);margin-bottom:10px;padding:0 2px}
+.prac-card{display:flex;align-items:center;gap:12px;padding:13px 14px;background:#fff;border-radius:14px;border:2px solid var(--br);margin-bottom:8px;cursor:pointer;transition:border-color .1s}
+.prac-card:active{border-color:var(--b)}
+.pc-ico{font-size:26px;width:44px;height:44px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.pc-info{flex:1}
+.pc-name{font-size:14px;font-weight:800}
+.pc-sub{font-size:12px;color:var(--tm);font-weight:600;margin-top:2px}
+.pc-badge{font-size:11px;font-weight:900;padding:4px 10px;border-radius:10px;background:var(--gl);color:#2e7d00}
+
+/* LEADERBOARD */
+.lb-head{padding:16px 16px 10px;display:flex;align-items:center;justify-content:space-between}
+.lb-ttl{font-size:20px;font-weight:900}
+.lb-my{font-size:13px;font-weight:700;color:var(--b)}
+.lb-row{display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1.5px solid var(--bg)}
+.lb-row.me{background:var(--bl)}
+.lb-rank{width:28px;font-size:14px;font-weight:900;text-align:center;color:var(--tm)}
+.lb-medal svg{width:22px;height:22px}
+.lb-ava{width:38px;height:38px;border-radius:50%;background:var(--g);color:#fff;font-size:16px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.lb-info{flex:1}
+.lb-name{font-size:14px;font-weight:800}
+.lb-xp{font-size:12px;color:var(--tm);font-weight:600}
+.lb-xpv{font-size:14px;font-weight:900;color:var(--b)}
+
+/* ACHIEVEMENTS */
+.ach-grid{padding:16px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ach-card{border-radius:16px;border:2.5px solid var(--br);padding:16px 12px;display:flex;flex-direction:column;align-items:center;gap:7px;text-align:center;transition:border-color .1s}
+.ach-card.earned{border-color:var(--y);background:var(--yl)}
+.ac-ico{font-size:32px;line-height:1}
+.ac-name{font-size:13px;font-weight:900}
+.ac-desc{font-size:11px;color:var(--tm);font-weight:600;line-height:1.4}
+.ac-badge{font-size:10px;font-weight:900;padding:3px 8px;border-radius:8px;background:var(--y);color:#7a5900;margin-top:2px}
+.ac-lock{font-size:10px;font-weight:700;color:var(--tl);margin-top:2px}
+.ach-hdr{padding:16px 16px 4px;font-size:18px;font-weight:900}
+
+/* PROFILE */
+.prof-head{padding:22px 20px 16px;background:linear-gradient(160deg,var(--bl) 0%,#fff 100%);border-bottom:2px solid var(--br);display:flex;align-items:center;gap:14px}
+.ph-ava{width:68px;height:68px;border-radius:50%;background:var(--g);display:flex;align-items:center;justify-content:center;flex-shrink:0;border:3px solid var(--bd);overflow:hidden}
+.ph-info{flex:1}
+.ph-name{font-size:20px;font-weight:900}
+.ph-rank{font-size:13px;font-weight:700;color:var(--b);margin-top:3px;display:flex;align-items:center;gap:5px}
+.rank-star{width:14px;height:14px}
+.prof-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:14px 16px}
+.ps-card{background:var(--bg);border-radius:12px;padding:12px 10px;text-align:center}
+.ps-val{font-size:20px;font-weight:900}
+.ps-lbl{font-size:10px;font-weight:800;color:var(--tl);text-transform:uppercase;margin-top:2px}
+.prof-cal{padding:0 16px 16px}
+.pc-ttl{font-size:14px;font-weight:900;margin-bottom:10px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal-cell{aspect-ratio:1;border-radius:4px;background:var(--bg)}
+.cal-cell.active{background:var(--g)}
+.cal-cell.today{background:var(--b)}
+.rank-ladder{padding:0 16px 24px}
+.rl-ttl{font-size:14px;font-weight:900;margin-bottom:10px}
+.rl-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1.5px solid var(--bg)}
+.rl-dot{width:12px;height:12px;border-radius:50%;background:var(--br);flex-shrink:0}
+.rl-dot.done{background:var(--g)}
+.rl-dot.cur{background:var(--b);box-shadow:0 0 0 3px var(--bl)}
+.rl-name{flex:1;font-size:14px;font-weight:800}
+.rl-xp{font-size:12px;font-weight:700;color:var(--tl)}
+
+/* TOAST / ACHIEVEMENT BANNER */
+#toast{position:absolute;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:#333;color:#fff;font-size:13px;font-weight:800;padding:10px 20px;border-radius:22px;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap;z-index:200}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+#ach-t{position:absolute;top:0;left:0;right:0;background:linear-gradient(90deg,var(--yl),#fff8c5);border-bottom:2px solid var(--y);padding:10px 16px;display:flex;align-items:center;gap:10px;z-index:300;transform:translateY(-100%);transition:transform .4s cubic-bezier(.34,1.56,.64,1)}
+#ach-t.show{transform:translateY(0)}
+#at-ico{font-size:22px}
+.at-texts .at-t{font-size:14px;font-weight:900;color:#7a5900}
+.at-texts .at-s{font-size:12px;font-weight:600;color:#a06b00}
+
+/* XP GAIN POP */
+@keyframes xpPop{0%{transform:translateY(0) scale(1);opacity:1}100%{transform:translateY(-44px) scale(1.2);opacity:0}}
+.xp-pop{position:fixed;font-size:18px;font-weight:900;color:var(--y);pointer-events:none;z-index:9999;animation:xpPop 1.1s cubic-bezier(.22,1,.36,1) forwards;text-shadow:0 2px 6px rgba(0,0,0,.18)}
+
+/* CONFETTI */
+.cf{position:fixed;pointer-events:none;z-index:9999;animation:cfFall 1.4s cubic-bezier(.23,1,.32,1) forwards}
+@keyframes cfFall{0%{transform:translateY(0) rotate(0) scale(1);opacity:1}100%{transform:translateY(-120vh) rotate(720deg) scale(.3);opacity:0}}
+
+/* NODE MODAL */
+#s-nmodal{background:rgba(0,0,0,.5);flex-direction:column;justify-content:flex-end;z-index:30}
+.nm-card{background:#fff;border-radius:22px 22px 0 0;padding:0 0 28px}
+.nm-handle{width:40px;height:4px;background:var(--br);border-radius:4px;margin:12px auto 0}
+.nm-body{padding:20px 20px 8px}
+.nm-ico{font-size:36px;margin-bottom:8px}
+.nm-ttl{font-size:21px;font-weight:900;margin-bottom:4px}
+.nm-topics{font-size:13px;color:var(--tm);font-weight:600;margin-bottom:14px}
+.nm-pills{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:20px}
+.nm-xp{font-size:13px;font-weight:700;color:var(--tm);margin-bottom:14px}
+
+/* COLOR HELPERS */
+.uh-g{background:#d7ffb8;color:#2e7d00}
+.uh-b{background:#ddf4ff;color:#006eb3}
+.uh-o{background:#fff0d9;color:#a05800}
+.uh-p{background:#f5e8ff;color:#7700bb}
+.node-g{background:var(--g);box-shadow:0 5px 0 var(--gd)}
+.node-b{background:var(--b);box-shadow:0 5px 0 var(--bd)}
+.node-o{background:var(--o);box-shadow:0 5px 0 var(--od)}
+.node-p{background:var(--p);box-shadow:0 5px 0 var(--pd)}
+.node-done{background:#ccc;box-shadow:0 5px 0 #aaa}
+.node-lock{background:#ddd;box-shadow:0 5px 0 #bbb;cursor:default}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- ACHIEVEMENT BANNER -->
+<div id="ach-t">
+  <span id="at-ico">🏆</span>
+  <div class="at-texts"><div class="at-t" id="at-t">Achievement!</div><div class="at-s" id="at-s"></div></div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- ═══════════════ SPLASH ═══════════════ -->
+<div class="sc on" id="s-splash">
+  <svg class="sp-owl" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="100" cy="118" rx="62" ry="68" fill="#58CC02"/>
+    <ellipse cx="100" cy="118" rx="62" ry="68" fill="#58CC02"/>
+    <ellipse cx="100" cy="130" rx="44" ry="48" fill="#89E219"/>
+    <circle cx="78" cy="95" r="22" fill="#fff"/>
+    <circle cx="122" cy="95" r="22" fill="#fff"/>
+    <circle cx="78" cy="95" r="14" fill="#1A1A1A"/>
+    <circle cx="122" cy="95" r="14" fill="#1A1A1A"/>
+    <circle cx="83" cy="90" r="4.5" fill="#fff"/>
+    <circle cx="127" cy="90" r="4.5" fill="#fff"/>
+    <ellipse cx="100" cy="115" rx="12" ry="8" fill="#FF9600"/>
+    <ellipse cx="100" cy="120" rx="10" ry="6" fill="#E08600"/>
+    <ellipse cx="76" cy="140" rx="18" ry="10" fill="#46A302"/>
+    <ellipse cx="124" cy="140" rx="18" ry="10" fill="#46A302"/>
+    <ellipse cx="68" cy="148" rx="8" ry="5" fill="#ff9600" opacity=".5"/>
+    <ellipse cx="132" cy="148" rx="8" ry="5" fill="#ff9600" opacity=".5"/>
+    <path d="M86 168 Q82 178 78 182 M100 170 Q100 181 100 185 M114 168 Q118 178 122 182" stroke="#46A302" stroke-width="4" stroke-linecap="round" fill="none"/>
+    <path d="M60 78 Q52 60 62 52 Q70 44 78 56" fill="#46A302"/>
+    <path d="M140 78 Q148 60 138 52 Q130 44 122 56" fill="#46A302"/>
+  </svg>
+  <div class="sp-title">AnalystQuest</div>
+  <div class="sp-sub">Master Product Analytics — from complete beginner to Principal Analyst</div>
+  <input class="sp-input" id="sp-name" placeholder="Enter your name..." maxlength="24">
+  <div class="sp-chips">
+    <span class="chip cg">📊 Metrics</span>
+    <span class="chip cb">🗄️ SQL</span>
+    <span class="chip co">📈 Statistics</span>
+    <span class="chip cp">🧠 A/B Testing</span>
+    <span class="chip cg">🔍 Analysis</span>
+    <span class="chip cb">📋 Dashboards</span>
+  </div>
+  <button class="btn btn-g" id="sp-start" onclick="startGame()">GET STARTED</button>
+</div>
+
+<!-- ═══════════════ MAIN ═══════════════ -->
+<div class="sc" id="s-main">
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="tb-left">
+      <svg width="32" height="32" viewBox="0 0 200 200"><ellipse cx="100" cy="115" rx="58" ry="62" fill="#58CC02"/><ellipse cx="100" cy="126" rx="40" ry="44" fill="#89E219"/><circle cx="80" cy="95" r="19" fill="#fff"/><circle cx="120" cy="95" r="19" fill="#fff"/><circle cx="80" cy="95" r="12" fill="#1A1A1A"/><circle cx="120" cy="95" r="12" fill="#1A1A1A"/><circle cx="85" cy="91" r="4" fill="#fff"/><circle cx="125" cy="91" r="4" fill="#fff"/><ellipse cx="100" cy="113" rx="10" ry="7" fill="#FF9600"/></svg>
+      <span class="tb-logo-txt">AnalystQuest</span>
+    </div>
+    <div class="tb-stats">
+      <span class="tb-s s-fire">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="#FF9600"><path d="M12 23c5.523 0 8-3.582 8-8 0-4.285-2.858-7.143-4.286-8.571C15.714 5.429 15 6 14.286 7.143 13.57 8.286 12 9 12 9c0-2.286-.571-4.571-3.429-6C7.143 2.429 5.714 1 5.714 1 4.286 4.429 4 6.857 4 9c0 4 2.667 8 4 9.333C9.048 19.619 10.286 20 11 20c-1.333-1.333-2-3.333-1-5 .667 1.667 2 2.667 4 3-2-2-1-5 0-6 .5 1.5 1.5 2.5 3 3-1.5-2-1-4.5 0-5.5C17.5 11 18 14.5 16 17c1.5-.5 3-2 3-4 1 2 1 4.5-1 6.5 2.143-1 3-3.5 3-5.5 0 4.5-3 8-9 9z"/></svg>
+        <span id="tb-streak">0</span>
+      </span>
+      <span class="tb-s s-gem">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="#1CB0F6"><path d="M12 2L2 9l10 13L22 9z"/></svg>
+        <span id="tb-xp">0</span>
+      </span>
+      <span class="tb-s s-heart">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="#FF4B4B"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        <span id="tb-hearts">5</span>
+      </span>
+    </div>
+  </div>
+  <!-- XP Bar -->
+  <div class="xp-bar-wrap">
+    <div class="xp-bar-row"><span id="xp-rank-lbl">Intern</span><span id="xp-next-lbl">300 XP to Junior Analyst</span></div>
+    <div class="xp-bar-bg"><div class="xp-bar-fill" id="xp-bar" style="width:0%"></div></div>
+  </div>
+  <!-- Tab content -->
+  <div class="scroll" id="tab-learn" style="flex:1;overflow-y:auto"></div>
+  <div class="scroll" id="tab-practice" style="display:none;flex:1;overflow-y:auto"></div>
+  <div class="scroll" id="tab-lb" style="display:none;flex:1;overflow-y:auto"></div>
+  <div class="scroll" id="tab-ach" style="display:none;flex:1;overflow-y:auto"></div>
+  <div class="scroll" id="tab-prof" style="display:none;flex:1;overflow-y:auto"></div>
+  <!-- Bottom nav -->
+  <div class="tabs">
+    <div class="tab active" id="tab0" onclick="switchTab(0)">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Learn
+    </div>
+    <div class="tab" id="tab1" onclick="switchTab(1)">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      Practice
+    </div>
+    <div class="tab" id="tab2" onclick="switchTab(2)">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      Leaderboard
+    </div>
+    <div class="tab" id="tab3" onclick="switchTab(3)">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
+      Achievements
+    </div>
+    <div class="tab" id="tab4" onclick="switchTab(4)">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Profile
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ LESSON ═══════════════ -->
+<div class="sc" id="s-lesson">
+  <div class="les-top">
+    <button class="les-close" onclick="closeLesson()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#777" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="les-prog-bg"><div class="les-prog-fill" id="les-prog" style="width:0%"></div></div>
+    <div class="les-hearts">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="#FF4B4B"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+      <span id="les-hearts-val">5</span>
+    </div>
+  </div>
+  <div class="les-body" id="les-body"></div>
+  <div class="les-foot" id="les-foot">
+    <div class="fb-row" id="fb-row" style="display:none">
+      <span class="fb-ico" id="fb-ico"></span>
+      <div class="fb-texts"><div class="fb-lbl" id="fb-lbl"></div><div class="fb-exp" id="fb-exp"></div></div>
+    </div>
+    <div class="foot-btn-row">
+      <button class="foot-btn fb-skip" id="fb-skip" onclick="skipQ()">SKIP</button>
+      <button class="foot-btn fb-check dis" id="fb-check" onclick="checkAnswer()">CHECK</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ DONE ═══════════════ -->
+<div class="sc" id="s-done">
+  <svg class="done-owl" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="100" cy="118" rx="62" ry="68" fill="#58CC02"/>
+    <ellipse cx="100" cy="130" rx="44" ry="48" fill="#89E219"/>
+    <circle cx="78" cy="95" r="22" fill="#fff"/><circle cx="122" cy="95" r="22" fill="#fff"/>
+    <circle cx="78" cy="95" r="14" fill="#1A1A1A"/><circle cx="122" cy="95" r="14" fill="#1A1A1A"/>
+    <circle cx="83" cy="90" r="4.5" fill="#fff"/><circle cx="127" cy="90" r="4.5" fill="#fff"/>
+    <path d="M88 112 Q100 124 112 112" stroke="#2e7d00" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+    <ellipse cx="100" cy="108" rx="10" ry="6" fill="#FF9600"/>
+    <path d="M86 168 Q82 178 78 182 M100 170 Q100 181 100 185 M114 168 Q118 178 122 182" stroke="#46A302" stroke-width="4" stroke-linecap="round" fill="none"/>
+    <path d="M60 78 Q52 60 62 52 Q70 44 78 56" fill="#46A302"/>
+    <path d="M140 78 Q148 60 138 52 Q130 44 122 56" fill="#46A302"/>
+  </svg>
+  <div class="done-ttl" id="done-ttl">Lesson Complete!</div>
+  <div class="done-sub" id="done-sub">Great work today!</div>
+  <div class="done-stats">
+    <div class="done-stat"><span class="ds-val" id="done-xp" style="color:var(--y)">+20</span><span class="ds-lbl">XP</span></div>
+    <div class="done-stat"><span class="ds-val" id="done-acc" style="color:var(--g)">100%</span><span class="ds-lbl">Accuracy</span></div>
+    <div class="done-stat"><span class="ds-val" id="done-qs" style="color:var(--b)">4</span><span class="ds-lbl">Questions</span></div>
+  </div>
+  <button class="btn btn-g" onclick="finishLesson()">CONTINUE</button>
+</div>
+
+<!-- ═══════════════ FAIL ═══════════════ -->
+<div class="sc" id="s-fail">
+  <div class="fail-ico">💔</div>
+  <div class="fail-ttl">You ran out of hearts!</div>
+  <div class="fail-sub">Practice completed lessons to earn more hearts, then try again.</div>
+  <br>
+  <button class="btn btn-b" onclick="show('s-main');renderLearn()">GO PRACTICE</button>
+  <button class="btn btn-out" style="margin-top:10px" onclick="show('s-main');renderLearn()">BACK HOME</button>
+</div>
+
+<!-- ═══════════════ RANK UP ═══════════════ -->
+<div class="sc" id="s-rankup">
+  <div class="ru-ring" id="ru-ring">🏅</div>
+  <div class="ru-ttl">Rank Up!</div>
+  <div class="ru-sub">You've reached a new level</div>
+  <div class="ru-ds" id="ru-ds"></div>
+  <br>
+  <button class="btn btn-g" onclick="show('s-main');renderLearn()">KEEP GOING</button>
+</div>
+
+<!-- NODE MODAL -->
+<div class="sc" id="s-nmodal" onclick="closeNModal(event)">
+  <div class="nm-card">
+    <div class="nm-handle"></div>
+    <div class="nm-body">
+      <div class="nm-ico" id="nm-ico"></div>
+      <div class="nm-ttl" id="nm-ttl"></div>
+      <div class="nm-topics" id="nm-topics"></div>
+      <div class="nm-xp" id="nm-xp"></div>
+      <div class="nm-pills" id="nm-pills"></div>
+      <button class="btn btn-g" id="nm-start" onclick="startLesson()">START LESSON</button>
+    </div>
+  </div>
+</div>
+
+<!-- GUIDE SHEET -->
+<div class="bottom-sheet" id="guide-sheet" style="display:none">
+  <div class="bs-bg" onclick="closeGuide()"></div>
+  <div class="bs-card">
+    <div class="bs-handle"></div>
+    <div class="bs-scroll" id="guide-content"></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════ CURRICULUM JSON ════════════════════════════ -->
+<script type="application/json" id="CUR">
+[{"sec": "Section 1 \u2014 Analyst Foundations", "cls": "uh-g", "name": "What Is Product Analytics?", "guide": "Understand the PA role, how it differs from adjacent roles, and the mindset that separates good analysts from great ones (Rodrigues, Ch. 1).", "nodes": [{"id": "n01", "ico": "\ud83d\udcca", "lbl": "The PA Role", "xp": 20, "topics": "Role definition \u00b7 Day-to-day work \u00b7 Actionable insights \u00b7 Data guru vs junior analyst", "qs": [{"t": "mcq", "tag": "Concept", "q": "Rodrigues argues that the key difference between a 'junior analyst' and a 'data guru' is:", "opts": ["The guru uses more programming languages", "The junior focuses on one-off facts; the guru builds theories that lead to actionable insights", "The guru only works with revenue", "The junior has fewer years of experience"], "ans": 1, "exp": "Rodrigues warns against the 'misguided analyst' who produces one-off facts with no theoretical framework. The data guru builds models of user behavior that drive real product decisions."}, {"t": "tf", "tag": "True or False", "q": "Rodrigues argues that 'leaving users out of the model' is one of the most common and costly mistakes in product analytics.", "ans": true, "exp": "Chapter 1 opens with this thesis: data models that ignore the human context of user behavior produce garbage insights. Users must always be the center of the analysis."}, {"t": "blank", "tag": "Fill in the Blank", "q": "The book's central term for insights that directly drive change in a product or organization is ___ insights.", "hint": ["actionable", "statistical", "descriptive", "predictive"], "ans": "actionable", "exp": "Rodrigues defines 'actionable' as insights that change a product or organizational decision. Everything in the book is oriented toward this goal."}, {"t": "order", "tag": "Put in Order", "q": "Arrange the stages of a product analytics project in the correct order (per Rodrigues):", "items": ["Theory building and conceptualization", "Metric creation and operationalization", "Statistical testing or modeling", "Translating results into actionable insights"], "exp": "Theory first, then measurement, then analysis, then action. Jumping to analysis without theory is the cardinal sin \u2014 'garbage in, garbage out.'"}]}, {"id": "n02", "ico": "\ud83e\udd1d", "lbl": "PA vs Other Roles", "xp": 20, "topics": "PA vs Data Scientist \u00b7 Subject-matter expert \u00b7 ML guru gap \u00b7 Causal vs predictive focus", "qs": [{"t": "mcq", "tag": "Concept", "q": "Rodrigues argues that many data scientists are well-versed in ML but lack:", "opts": ["Programming skills", "User expertise and qualitative skills to contextualize human behavioral data", "Statistical knowledge", "Business acumen"], "ans": 1, "exp": "The book's core thesis: ML gurus know algorithms but not human context. Product analysts bridge this gap using social science qualitative methods combined with quantitative rigor."}, {"t": "match", "tag": "Match Pairs", "q": "Match each professional type to their gap per Rodrigues:", "pairs": [["Subject-matter expert", "Understands behavior but lacks statistical rigor"], ["Machine-learning guru", "Has algorithms but lacks user context and theory"], ["Product Analyst", "Bridges both \u2014 qualitative theory AND quantitative methods"], ["BI Analyst", "Focuses on reporting dashboards, not behavioral inference"]], "exp": "The book explicitly sets out to bridge the gap between these two camps. Great product analytics requires merging the user expert's intuition with the ML guru's technical rigor."}, {"t": "tf", "tag": "True or False", "q": "Rodrigues says predictive algorithms are always preferable to causal inference for understanding user behavior.", "ans": false, "exp": "The book explicitly prefers causal inference over prediction. Prediction tells you WHAT will happen; causation tells you what to DO about it. For product decisions, causation is what matters."}, {"t": "blank", "tag": "Fill in the Blank", "q": "Product data science focuses on harnessing user data to drive changes that meet core ___ goals such as user growth, revenue, and engagement.", "hint": ["business", "engineering", "academic", "personal"], "ans": "business", "exp": "Product analytics exists in service of business goals. Technical sophistication without business impact is wasted effort. Always tie analysis to a concrete decision."}]}, {"id": "n03", "ico": "\ud83e\udde0", "lbl": "The Analyst Mindset", "xp": 20, "topics": "Dinner party model \u00b7 Social systems \u00b7 Variable search problem \u00b7 Causation challenge", "qs": [{"t": "mcq", "tag": "Concept", "q": "Why does Rodrigues use a 'dinner party' as an analogy for product analytics?", "opts": ["Both require catering budgets", "A party is an open social system with unclear outcomes, unknown motives, and millions of interacting variables \u2014 just like a web product", "Both require invitations", "Parties generate revenue like products do"], "ans": 1, "exp": "The party analogy captures why user data is hard: open systems, underdefined success, unknown motives, millions of potential behaviors. It sets the stage for why rigorous methods are needed."}, {"t": "tf", "tag": "True or False", "q": "Rodrigues states that inferring causation from observational user data is almost impossible without a controlled experiment.", "ans": true, "exp": "Chapter 1: 'Inferring causation is almost impossible' in social systems. This motivates the entire book's focus on randomized experiments and quasi-experimental causal inference methods."}, {"t": "order", "tag": "Put in Order", "q": "Arrange Rodrigues's reasons why user data is uniquely difficult, from most basic to most complex:", "items": ["Human behavior is a process, not a static problem", "Outcomes in social products are not clearly defined", "Social systems have rampant incomplete information", "There are millions of potential behavioral variables"], "exp": "These four challenges from Chapter 1 motivate the entire analytical toolkit in the book. Each challenge requires a specific methodological response."}, {"t": "blank", "tag": "Fill in the Blank", "q": "Rodrigues says finding the right metrics is a '___ search problem' \u2014 like finding a needle in a haystack of millions of potential behavioral variables.", "hint": ["variable", "needle", "feature", "search"], "ans": "variable", "exp": "With millions of potential behavioral variables, finding the 20% that matter is more valuable than having the best algorithm. This is why theory \u2014 which guides what to measure \u2014 comes first."}]}]}, {"sec": "Section 1 \u2014 Analyst Foundations", "cls": "uh-g", "name": "Theory Building", "guide": "How to build theories of user behavior before touching the data. Based on Chapters 1-2 of Rodrigues.", "nodes": [{"id": "n04", "ico": "\ud83c\udfd7\ufe0f", "lbl": "Building a Theory", "xp": 20, "topics": "Theory vs one-off facts \u00b7 Typology \u00b7 Hypothesis generation \u00b7 Falsification \u00b7 Conceptualization", "qs": [{"t": "mcq", "tag": "Concept", "q": "Rodrigues's alternative to the 'useless one-off fact' is building a:", "opts": ["Bigger dataset", "Typology \u2014 a theoretical classification of user types that generates testable hypotheses", "Better algorithm", "More dashboards"], "ans": 1, "exp": "The typology (e.g., whales vs wallflowers) is Rodrigues's key qualitative tool from Chapter 2. It gives you a theory that drives targeted metric creation and hypothesis testing."}, {"t": "tf", "tag": "True or False", "q": "Rodrigues argues that a good theory must be falsifiable \u2014 there must be evidence that could prove it wrong.", "ans": true, "exp": "Rodrigues borrows from philosophy of science. A theory that cannot be disproven is not useful. Your theory of user behavior must have testable, potentially falsifiable predictions."}, {"t": "match", "tag": "Match Pairs", "q": "Match each stage of the theory-building process to its description:", "pairs": [["Conceptualization", "Defining what an abstract term (e.g., engagement) means"], ["Operationalization", "Turning a concept into a measurable metric"], ["Hypothesis", "A specific, testable prediction derived from the theory"], ["Falsification", "Testing whether evidence could disprove the theory"]], "exp": "Rodrigues's four-step process: conceptualize the idea, operationalize it into a metric, generate a hypothesis, then test it. Skipping any step leads to invalid or uninterpretable results."}, {"t": "blank", "tag": "Fill in the Blank", "q": "Turning the abstract concept of 'engagement' into the measurable metric 'daily sessions per user' is called ___.", "hint": ["operationalization", "conceptualization", "falsification", "standardization"], "ans": "operationalization", "exp": "Operationalization is the critical bridge between theory and data. Without it, you may be measuring a proxy that doesn't capture the concept you actually care about."}]}, {"id": "n05", "ico": "\ud83e\udd88", "lbl": "Whales & Wallflowers", "xp": 20, "topics": "User typology \u00b7 Whale vs wallflower \u00b7 Social behavior model \u00b7 Middle School Dance", "qs": [{"t": "mcq", "tag": "Concept", "q": "In Rodrigues's Middle School Dance model, 'whales' refers to:", "opts": ["Users with the highest revenue", "Power users who generate most content and drive social activity \u2014 the few dancing in the middle", "Users who have been on the platform longest", "Users who invite the most friends"], "ans": 1, "exp": "Whales = the few active content creators (the dancers). Wallflowers = passive lurkers who consume but rarely create. This power-law distribution of engagement is universal in social products."}, {"t": "tf", "tag": "True or False", "q": "The Middle School Dance model implies a power-law distribution where a small number of users generate the vast majority of content.", "ans": true, "exp": "Rodrigues's model: a few users dancing (whales) and most standing at the sides watching (wallflowers). The analytical implication: you need different strategies for each user type."}, {"t": "blank", "tag": "Fill in the Blank", "q": "In Rodrigues's whales and wallflowers typology, passive users who consume content but rarely create it are called ___.", "hint": ["wallflowers", "lurkers", "inactive", "dormant"], "ans": "wallflowers", "exp": "Wallflowers are the majority of users. The analytical challenge: how do you move wallflowers toward whale behavior? Understanding what separates them is the first step."}, {"t": "match", "tag": "Match Pairs", "q": "Match each user type to their product role:", "pairs": [["Whale", "High content creation, high social engagement \u2014 drives product value"], ["Wallflower", "Low creation, passive consumption \u2014 needs activation"], ["New user", "Just entered \u2014 behavior not yet established"], ["Dead user", "Has permanently left the product"]], "exp": "These four states underpin Rodrigues's transition matrix in Chapter 9. Understanding user states lets you model population dynamics and identify where to intervene."}]}, {"id": "n06", "ico": "\ud83d\udd2c", "lbl": "Types of Inference", "xp": 20, "topics": "Descriptive \u00b7 Comparative \u00b7 Causal inference \u00b7 Prediction vs causation \u00b7 External validity", "qs": [{"t": "mcq", "tag": "Concept", "q": "Which type of inference answers 'what is happening?' without explaining why?", "opts": ["Causal inference", "Predictive inference", "Descriptive inference", "Comparative inference"], "ans": 2, "exp": "Descriptive inference describes the current state: how many users, what is the average session length, etc. It always precedes and motivates causal and comparative analysis."}, {"t": "tf", "tag": "True or False", "q": "Rodrigues explicitly prefers causal inference over prediction for product analytics because causation tells you what to change, not just what will happen.", "ans": true, "exp": "The book's second major theme. Prediction is useful for risk scoring (who will churn?). But to decide what to build or change, you need causal inference \u2014 what actually caused the outcome?"}, {"t": "order", "tag": "Put in Order", "q": "Arrange Rodrigues's inference types from least to most analytically demanding:", "items": ["Descriptive (what is happening?)", "Comparative (how do groups differ?)", "Predictive (what will happen next?)", "Causal (what caused this outcome?)"], "exp": "Rodrigues's hierarchy: description \u2192 comparison \u2192 prediction \u2192 causation. Each level requires more methodological assumptions and rigor. Always start with description."}, {"t": "blank", "tag": "Fill in the Blank", "q": "When a predictive model performs well on new data it has never seen, Rodrigues calls this external ___ \u2014 the key criterion for evaluating model usefulness.", "hint": ["validity", "reliability", "accuracy", "generalization"], "ans": "validity", "exp": "External validity = generalizability. A model that memorizes training data (overfitting) lacks external validity. This is why Rodrigues emphasizes cross-validation in Chapter 8."}]}]}, {"sec": "Section 2 \u2014 Behavioral Science", "cls": "uh-g", "name": "Behavioral Change Models", "guide": "Based on Chapter 3 of Rodrigues: the science behind why users change behavior and how to design products that move the needle.", "nodes": [{"id": "n07", "ico": "\ud83d\udd04", "lbl": "Behavioral Change", "xp": 20, "topics": "Stages of change \u00b7 Variable investment schedule \u00b7 Realistic expectations \u00b7 Cognition", "qs": [{"t": "mcq", "tag": "Concept", "q": "Rodrigues uses quitting smoking as an example to establish what key expectation about product behavioral change?", "opts": ["Smoking is unhealthy", "True behavioral change is extremely hard \u2014 most product interventions will affect only a small percentage of users", "Products should ban harmful behaviors", "Willpower alone determines change"], "ans": 1, "exp": "Rodrigues's realistic expectations section: if quitting a life-threatening addiction is hard, changing product behavior is also hard. Most features will have modest effects. Design accordingly."}, {"t": "tf", "tag": "True or False", "q": "Rodrigues argues that a randomized variable investment schedule (unpredictable rewards) is more powerful for sustaining behavior than a fixed, predictable reward.", "ans": true, "exp": "Variable rewards (like slot machines) are more reinforcing than fixed rewards. This is why social feeds, game loot boxes, and notification timing are powerful \u2014 the unpredictability drives compulsive engagement."}, {"t": "order", "tag": "Put in Order", "q": "Arrange the five Stages of Change (Prochaska model) in the correct sequence:", "items": ["Precontemplation (unaware of need to change)", "Contemplation (aware, considering change)", "Preparation (planning how to change)", "Action (actively changing behavior)", "Maintenance (sustaining the new behavior)"], "exp": "Rodrigues includes this model from behavioral psychology. Effective product onboarding walks users through these stages deliberately \u2014 awareness first, then intent, then habit."}, {"t": "blank", "tag": "Fill in the Blank", "q": "Rodrigues says that 'outsized positive rewards and ___ losses' create the motivational asymmetry that sustains behavioral engagement in web products.", "hint": ["mitigated", "eliminated", "exaggerated", "hidden"], "ans": "mitigated", "exp": "Make wins feel big and losses feel small. This asymmetry is a design principle: celebrate achievements prominently, downplay failures. Duolingo's design is a masterclass in this."}]}, {"id": "n08", "ico": "\ud83c\udfaf", "lbl": "Fogg Model", "xp": 20, "topics": "Motivation \u00b7 Ability \u00b7 Trigger \u00b7 BJ Fogg \u00b7 Social acceptance \u00b7 Friction reduction", "qs": [{"t": "mcq", "tag": "Concept", "q": "According to the Fogg Behavior Model (covered in Chapter 3), behavior occurs only when these three elements converge simultaneously:", "opts": ["Data, Design, and Distribution", "Motivation, Ability, and Trigger", "Awareness, Intent, and Action", "Users, Products, and Metrics"], "ans": 1, "exp": "B = MAP: Behavior happens when a user is Motivated, has the Ability to act, and receives a Trigger at the right moment. Remove any one element and the behavior fails to occur."}, {"t": "match", "tag": "Match Pairs", "q": "Match each Fogg model element to its product implication:", "pairs": [["Motivation", "Address pain/pleasure, hope/fear, or social acceptance/rejection"], ["Ability", "Reduce friction \u2014 make the behavior as easy as possible"], ["Trigger", "Right prompt at the right moment: push notification, email, in-app banner"], ["Social motivation", "Use social proof: show what friends and peers are doing"]], "exp": "Rodrigues applies Fogg's model to product design diagnostics. Low conversion? Systematically check: Is the user motivated? Is the action easy? Is there a well-timed trigger?"}, {"t": "tf", "tag": "True or False", "q": "The Fogg model implies that even a highly motivated user will fail to act if the required behavior is too effortful or complex.", "ans": true, "exp": "High motivation + high friction = failure. This is why checkout flows must be frictionless, onboarding must be short, and calls-to-action must be obvious. Friction kills conversion."}, {"t": "blank", "tag": "Fill in the Blank", "q": "In the Fogg model, a ___ is the specific prompt that initiates the desired behavior at the moment of sufficient motivation and ability.", "hint": ["trigger", "reward", "incentive", "reminder"], "ans": "trigger", "exp": "Triggers without motivation = annoying spam. Motivation without triggers = missed opportunity. The best products identify high-motivation moments and deliver well-timed triggers exactly then."}]}, {"id": "n09", "ico": "\ud83e\uddea", "lbl": "ABA & Measuring Change", "xp": 20, "topics": "ABA model \u00b7 Antecedent \u00b7 Behavior \u00b7 Consequence \u00b7 Measuring behavioral change \u00b7 Realistic expectations", "qs": [{"t": "mcq", "tag": "Concept", "q": "In the ABA (Antecedent-Behavior-Consequence) model applied to products, what is the 'antecedent'?", "opts": ["The metric used to measure behavior", "The event or context that precedes and triggers the behavior (e.g., a push notification)", "The reward or consequence that follows the behavior", "The user segment most likely to change"], "ans": 1, "exp": "ABA in products: push notification (A) \u2192 user opens app (B) \u2192 sees personalized feed (C). The antecedent is the trigger; the consequence shapes whether the behavior recurs."}, {"t": "tf", "tag": "True or False", "q": "Rodrigues argues that realistic expectations for behavioral change mean most product features will affect only a small percentage of users.", "ans": true, "exp": "Chapter 3's 'Behavioral Change Worksheet' section: be realistic before investing. If only 2% of users are likely to change, the feature ROI must justify that. Most changes have modest effects."}, {"t": "blank", "tag": "Fill in the Blank", "q": "Rodrigues says ___ behaviors \u2014 ones users already want to do \u2014 are the easiest to influence with product design changes.", "hint": ["motivated", "passive", "social", "monetized"], "ans": "motivated", "exp": "The easiest behavior change reduces friction for something users already want to do. Forcing entirely new behaviors is much harder. Align product interventions with existing user motivations."}, {"t": "order", "tag": "Put in Order", "q": "Arrange Rodrigues's behavioral change worksheet steps before investing in a product intervention:", "items": ["Define the specific behavior you want to change", "Estimate what percentage of users are likely to change", "Identify the change mechanism (Fogg, ABA, stages of change)", "Design, build, and A/B test the intervention"], "exp": "This worksheet prevents wasted engineering investment. If the analysis shows only 1% of users will change, you need very high revenue impact per user to justify the feature cost."}]}]}, {"sec": "Section 3 \u2014 Core Metrics", "cls": "uh-g", "name": "Core Product Metrics", "guide": "The four families of metrics every product team tracks: engagement, retention, revenue, and growth. Based on Rodrigues Chapter 5.", "nodes": [{"id": "n10", "ico": "\ud83d\udc65", "lbl": "Engagement Metrics", "xp": 25, "topics": "DAU \u00b7 WAU \u00b7 MAU \u00b7 Stickiness \u00b7 Active vs passive engagement \u00b7 Session depth", "qs": [{"t": "mcq", "tag": "Concept", "q": "Rodrigues distinguishes active from passive engagement. Which of the following is an ACTIVE engagement metric?", "opts": ["Time on feed page", "Pages loaded per session", "Number of likes, comments, or shares", "Scrolling depth"], "ans": 2, "exp": "Rodrigues Chapter 5: active engagement = user-initiated actions (like, share, comment). Passive = consumption without action (time on page, scroll depth). Capturing passive activity is harder and requires indirect proxies."}, {"t": "tf", "tag": "True or False", "q": "A DAU/MAU stickiness ratio of 85% (WhatsApp) indicates much stronger daily engagement than 15% (LinkedIn).", "ans": true, "exp": "DAU/MAU measures what proportion of monthly users return daily. WhatsApp is used by nearly all monthly users every day; LinkedIn is checked occasionally. Stickiness targets depend on the intended use frequency."}, {"t": "blank", "tag": "Fill in the Blank", "q": "If a product has 50,000 DAU and 200,000 MAU, its stickiness ratio is ___.", "hint": ["25%", "50%", "10%", "40%"], "ans": "25%", "exp": "50,000 / 200,000 = 0.25 = 25%. Rodrigues notes that stickiness targets vary by product type. Above 20% is generally considered good engagement for consumer apps."}, {"t": "match", "tag": "Match Pairs", "q": "Match each engagement metric to its description per Rodrigues Chapter 5:", "pairs": [["Active engagement", "User-initiated actions: likes, comments, shares, posts"], ["Passive engagement", "Consumption without action: time on page, pages loaded"], ["Stickiness (DAU/MAU)", "Proportion of monthly users who return daily"], ["Session length", "Total time spent per visit"]], "exp": "Rodrigues notes that passive engagement is particularly hard to measure for web products since it must be inferred indirectly from time and click data."}]}, {"id": "n11", "ico": "\ud83d\udd04", "lbl": "Retention Metrics", "xp": 25, "topics": "D1/D7/D30 retention \u00b7 Churn \u00b7 Cohort vs period retention \u00b7 Standardization \u00b7 Parity progression ratios", "qs": [{"t": "mcq", "tag": "Concept", "q": "Rodrigues distinguishes 'period retention' from 'cohort retention.' Period retention measures:", "opts": ["Retention of a specific group who joined at the same time", "Retention across all users in a given calendar period, regardless of when they joined", "Only paying users", "The daily churn rate"], "ans": 1, "exp": "Period retention = snapshot across all active users in a time window (e.g., what % of all users were active in January?). Cohort retention tracks a specific group over time. Both are needed for a complete picture."}, {"t": "tf", "tag": "True or False", "q": "A monthly churn rate of 5% means approximately 46% of users are lost over a year due to compounding.", "ans": true, "exp": "(1-0.05)^12 = 0.54, so 46% are lost annually. Compounding makes even small monthly churn rates catastrophically expensive over time \u2014 a critical calculation every analyst must know."}, {"t": "blank", "tag": "Fill in the Blank", "q": "Rodrigues's technique of adjusting metrics to remove compositional differences between cohorts being compared is called ___.", "hint": ["standardization", "normalization", "segmentation", "weighting"], "ans": "standardization", "exp": "Standardization makes cohort comparisons fair. If January's cohort is 10x larger than February's, comparing raw counts is misleading. Standardize to rates for valid comparisons across cohorts."}, {"t": "order", "tag": "Put in Order", "q": "Arrange these retention improvement strategies from fastest to implement to most impactful long-term:", "items": ["Optimize onboarding email sequences and in-app nudges", "Improve the activation experience (aha moment)", "Build a new high-value core feature", "Redesign the core product value proposition"], "exp": "Start with the cheapest intervention and measure impact before investing in fundamental product changes. The order matters for resource allocation."}]}, {"id": "n12", "ico": "\ud83d\udcb0", "lbl": "Revenue Metrics", "xp": 25, "topics": "MRR \u00b7 ARR \u00b7 ARPU \u00b7 LTV \u00b7 CAC \u00b7 Progression ratios \u00b7 Unit economics", "qs": [{"t": "mcq", "tag": "Concept", "q": "Rodrigues's 'parity progression ratios' (borrowed from demography) measure:", "opts": ["Revenue per user", "The rate at which users move from one state to another (e.g., free to paid)", "Daily active user counts", "Ad conversion rates"], "ans": 1, "exp": "Parity Progression Ratios measure state-to-state progression: % of free users who upgrade, % who complete onboarding, % who reach a second purchase. Rodrigues covers these in Chapter 5 metric development."}, {"t": "match", "tag": "Match Pairs", "q": "Match each revenue metric to its formula:", "pairs": [["ARPU", "Total Revenue / Active Users"], ["LTV", "ARPU x Average Customer Lifetime"], ["CAC", "Marketing Spend / New Customers Acquired"], ["MRR", "Monthly recurring revenue from all paying users"]], "exp": "These four form the foundation of SaaS revenue analysis. The key ratio is LTV:CAC \u2014 at least 3:1 indicates sustainable unit economics. Below 1:1 means you lose money on every customer."}, {"t": "tf", "tag": "True or False", "q": "Rodrigues places onboarding completion as part of acquisition metrics, not retention metrics.", "ans": true, "exp": "A user who signs up but never completes onboarding is a failed acquisition. Rodrigues Chapter 5: acquisition includes not just finding the product but successfully entering it through onboarding."}, {"t": "blank", "tag": "Fill in the Blank", "q": "If MRR is $50,000, the ARR is $___. (Enter the number only)", "hint": ["600000", "500000", "50000", "1200000"], "ans": "600000", "exp": "ARR = MRR x 12 = $50,000 x 12 = $600,000. ARR is the standard SaaS metric for investor communication and company valuation. MRR is used for monthly operational tracking."}]}, {"id": "n13", "ico": "\ud83d\udcc8", "lbl": "Growth Metrics", "xp": 25, "topics": "WoW/MoM growth \u00b7 k-factor \u00b7 Virality \u00b7 North Star Metric \u00b7 Acquisition channel ROI", "qs": [{"t": "mcq", "tag": "Concept", "q": "A product grows from 10,000 to 12,000 users in one month. The MoM growth rate is:", "opts": ["12%", "20%", "2%", "120%"], "ans": 1, "exp": "(12,000 - 10,000) / 10,000 = 0.20 = 20% MoM growth. Rodrigues uses growth rates as leading indicators. Consistent MoM growth is a stronger signal than absolute user counts."}, {"t": "tf", "tag": "True or False", "q": "A k-factor above 1.0 means each existing user brings in more than one new user, creating self-sustaining viral growth.", "ans": true, "exp": "k-factor = (invites per user) x (invite conversion rate). k > 1 = exponential viral growth. Rodrigues covers exponential growth models in the population forecasting chapter. It's the holy grail of growth."}, {"t": "blank", "tag": "Fill in the Blank", "q": "The single metric that best captures the core value delivered to users and predicts long-term business growth is called the ___ metric.", "hint": ["North Star", "vanity", "growth", "engagement"], "ans": "North Star", "exp": "The North Star Metric should capture value exchange (e.g., 'nights booked' for Airbnb, 'trips completed' for Uber). It should lead revenue rather than lag it."}, {"t": "order", "tag": "Put in Order", "q": "Rank acquisition channels by typical cost per acquired user from lowest to highest:", "items": ["Viral/word-of-mouth (near-zero marginal cost)", "Product-led growth (self-serve, minimal sales)", "Content/SEO (one-time cost, ongoing returns)", "Paid acquisition (ads and direct sales)"], "exp": "Viral acquisition has near-zero marginal cost. Paid acquisition is highest cost but most controllable and scalable. Most products use a portfolio of channels."}]}]}, {"sec": "Section 4 \u2014 Spreadsheets", "cls": "uh-b", "name": "Excel & Google Sheets", "guide": "Spreadsheet skills every analyst needs before learning SQL. Used every day for quick analysis and stakeholder communication.", "nodes": [{"id": "n14", "ico": "\ud83d\udccb", "lbl": "Essential Formulas", "xp": 20, "topics": "VLOOKUP \u00b7 SUMIF \u00b7 COUNTIF \u00b7 IF \u00b7 IFERROR \u00b7 Text functions", "qs": [{"t": "mcq", "tag": "Formula", "q": "Which formula looks up a customer plan type from another table using their user ID as a key?", "opts": ["SUMIF", "VLOOKUP", "COUNT", "AVERAGE"], "ans": 1, "exp": "VLOOKUP (or INDEX/MATCH) joins data from different tables based on a matching key \u2014 the same logic as a SQL JOIN. One of the most common analyst tasks in spreadsheets."}, {"t": "blank", "tag": "Fill in the Blank", "q": "=COUNTIF(A2:A100, 'premium') counts how many cells in the range ___ the text 'premium'.", "hint": ["equal", "contain", "exclude", "sum"], "ans": "equal", "exp": "COUNTIF counts exact matches by default. Use wildcards for partial matches: =COUNTIF(A:A,'*premium*') counts cells containing 'premium' anywhere in the text string."}, {"t": "tf", "tag": "True or False", "q": "IFERROR is useful for hiding #N/A errors that appear when a VLOOKUP finds no match in the lookup table.", "ans": true, "exp": "=IFERROR(VLOOKUP(...),'Not Found') shows 'Not Found' instead of #N/A. This makes reports dramatically cleaner and easier for non-technical stakeholders to read."}, {"t": "match", "tag": "Match Pairs", "q": "Match each formula to its primary use:", "pairs": [["SUMIF", "Sum values that meet a specified condition"], ["AVERAGEIF", "Average values that meet a specified condition"], ["VLOOKUP", "Find a value in another table using a key column"], ["TEXT", "Format numbers or dates as text strings"]], "exp": "These four formulas cover 80% of analyst spreadsheet work. Master them before moving to SQL \u2014 the conceptual logic transfers directly to SQL equivalents."}]}, {"id": "n15", "ico": "\ud83d\udd00", "lbl": "Pivot Tables", "xp": 20, "topics": "Pivot table creation \u00b7 Row/column fields \u00b7 Value aggregation \u00b7 Slicers \u00b7 Dynamic filtering", "qs": [{"t": "mcq", "tag": "Concept", "q": "You need total revenue by product category per month from raw transaction data. Fastest approach?", "opts": ["Write nested IF formulas", "Create a Pivot Table: category as rows, month as columns, SUM(revenue) as values", "Sort and manually total each category", "VLOOKUP across 12 month sheets"], "ans": 1, "exp": "Pivot Tables are designed for multi-dimensional aggregation \u2014 no formulas required. This is their core use case: slicing one metric by two dimensions simultaneously."}, {"t": "tf", "tag": "True or False", "q": "Slicers in pivot tables allow interactive filtering by clicking buttons, making pivot tables function like simple dashboards.", "ans": true, "exp": "Slicers turn pivot tables into interactive reports. Non-technical stakeholders can filter by date, region, or segment without touching the underlying data or pivot configuration."}, {"t": "order", "tag": "Put in Order", "q": "Arrange the steps to build a pivot table in the correct order:", "items": ["Select the raw data range", "Go to Insert > Pivot Table", "Drag fields into Rows and Columns", "Set the Values field to SUM or COUNT"], "exp": "This four-step process creates powerful cross-tabulations from raw data in under a minute. The most important analytical tool before you have direct database access."}, {"t": "blank", "tag": "Fill in the Blank", "q": "In a pivot table, the ___ area is where you place the metric you want to aggregate (e.g., Revenue, Count of Orders).", "hint": ["Values", "Rows", "Columns", "Filters"], "ans": "Values", "exp": "The Values area is where aggregation happens. Drag 'Revenue' here and set to SUM for total revenue. Drag 'Order ID' and set to COUNT for order volume. The other areas determine the grouping dimensions."}]}]}, {"sec": "Section 5 \u2014 SQL", "cls": "uh-b", "name": "SQL Basics", "guide": "SQL is the #1 most-used tool by Product Analysts. Learn to extract, filter, and aggregate data from any relational database.", "nodes": [{"id": "n16", "ico": "\ud83d\udd0d", "lbl": "SELECT & WHERE", "xp": 25, "topics": "SELECT \u00b7 FROM \u00b7 WHERE \u00b7 ORDER BY \u00b7 LIMIT \u00b7 DISTINCT \u00b7 NULL handling", "qs": [{"t": "mcq", "tag": "SQL", "q": "Which query correctly returns all columns from the users table where country is India?", "opts": ["GET * FROM users WHERE country=India", "SELECT * FROM users WHERE country='India'", "SELECT users WHERE country='India'", "FIND * IN users WHERE country IS India"], "ans": 1, "exp": "SQL syntax: SELECT [columns] FROM [table] WHERE [condition]. String values need single quotes. The WHERE clause filters rows. Always write SELECT before FROM."}, {"t": "blank", "tag": "Fill in the Blank", "q": "To return only unique values from a column (removing duplicates), use SELECT ___ column_name FROM table.", "hint": ["DISTINCT", "UNIQUE", "ONLY", "FILTER"], "ans": "DISTINCT", "exp": "SELECT DISTINCT removes duplicate values. Essential for understanding data cardinality: how many unique users, countries, plan types exist in your data."}, {"t": "tf", "tag": "True or False", "q": "ORDER BY defaults to ascending (A to Z, 0 to 9) order if neither ASC nor DESC is specified.", "ans": true, "exp": "ORDER BY col defaults to ASC. Add DESC for descending order. ORDER BY created_at DESC shows the most recent records first \u2014 the most common pattern for time-series analysis."}, {"t": "order", "tag": "Put in Order", "q": "Arrange these SQL clauses in the mandatory order for a valid query:", "items": ["SELECT column", "FROM table", "WHERE condition", "ORDER BY column", "LIMIT 10"], "exp": "SQL clause order is mandatory: SELECT > FROM > WHERE > GROUP BY > HAVING > ORDER BY > LIMIT. Writing them out of order produces a syntax error."}]}, {"id": "n17", "ico": "\u2795", "lbl": "Aggregate Functions", "xp": 25, "topics": "COUNT \u00b7 SUM \u00b7 AVG \u00b7 MIN \u00b7 MAX \u00b7 COUNT DISTINCT \u00b7 NULL behavior", "qs": [{"t": "mcq", "tag": "SQL", "q": "Which function counts only non-NULL values in a specific column?", "opts": ["COUNT(*)", "COUNT(user_id)", "SUM(user_id)", "MAX(user_id)"], "ans": 1, "exp": "COUNT(column) counts non-NULL values in that column. COUNT(*) counts ALL rows including NULLs. For accurate user counts, always prefer COUNT(user_id) over COUNT(*) when NULLs are possible."}, {"t": "match", "tag": "Match Pairs", "q": "Match each aggregate function to its result:", "pairs": [["COUNT(*)", "Number of rows including NULLs"], ["SUM(revenue)", "Total of all revenue values"], ["AVG(session_time)", "Mean session duration (ignores NULLs)"], ["MAX(created_at)", "Most recent timestamp in the column"]], "exp": "These five aggregate functions appear in almost every analytical SQL query. They are the foundational building blocks for calculating any metric from raw event data."}, {"t": "blank", "tag": "Fill in the Blank", "q": "To count unique users (not total events) from a column with duplicates, use COUNT(___ user_id).", "hint": ["DISTINCT", "UNIQUE", "ONLY", "ALL"], "ans": "DISTINCT", "exp": "COUNT(DISTINCT user_id) gives unique users. COUNT(user_id) gives total events, including multiple events from the same user. This distinction is critical for all user-level product metrics."}, {"t": "tf", "tag": "True or False", "q": "AVG() automatically ignores NULL values, which can distort averages if NULLs represent zeros rather than missing data.", "ans": true, "exp": "All SQL aggregate functions ignore NULLs. If NULL means 'zero revenue' for a user, you must use COALESCE(revenue, 0) before averaging to include those users in the calculation correctly."}]}, {"id": "n18", "ico": "\ud83d\udce6", "lbl": "GROUP BY & HAVING", "xp": 25, "topics": "GROUP BY \u00b7 HAVING \u00b7 Multi-column GROUP BY \u00b7 Filtering after aggregation", "qs": [{"t": "mcq", "tag": "SQL", "q": "What does GROUP BY country do in a SQL query with COUNT(*)?", "opts": ["Sorts results by country alphabetically", "Filters rows without a country value", "Groups rows by country so COUNT(*) returns the number of rows per country", "Joins a reference table of countries"], "ans": 2, "exp": "GROUP BY collapses all rows with the same country value into one group. Combined with COUNT or SUM, you get per-group totals \u2014 the foundation of all aggregate analytical queries."}, {"t": "blank", "tag": "Fill in the Blank", "q": "To filter groups after aggregation (e.g., only countries with more than 1000 users), use the ___ clause instead of WHERE.", "hint": ["HAVING", "FILTER", "WHERE", "LIMIT"], "ans": "HAVING", "exp": "WHERE filters rows BEFORE grouping. HAVING filters AFTER aggregation. HAVING COUNT(*) > 1000 \u2014 returns only country groups with more than 1000 users."}, {"t": "order", "tag": "Put in Order", "q": "Arrange these clauses in the correct SQL order: HAVING, FROM, GROUP BY, SELECT.", "items": ["SELECT country, COUNT(*)", "FROM events", "GROUP BY country", "HAVING COUNT(*) > 100"], "exp": "SELECT > FROM > WHERE > GROUP BY > HAVING > ORDER BY > LIMIT. HAVING must follow GROUP BY because it filters the groups that GROUP BY creates."}, {"t": "tf", "tag": "True or False", "q": "You can GROUP BY multiple columns simultaneously, such as GROUP BY country, plan_type.", "ans": true, "exp": "Multi-column GROUP BY creates unique combinations. GROUP BY country, plan_type gives user counts for each unique country + plan combination \u2014 powerful for segment cross-analysis."}]}]}, {"sec": "Section 5 \u2014 SQL", "cls": "uh-b", "name": "SQL Intermediate", "guide": "JOINs, CTEs, and date functions \u2014 the tools that combine tables and power advanced analytical queries.", "nodes": [{"id": "n19", "ico": "\ud83d\udd17", "lbl": "JOINs", "xp": 30, "topics": "INNER JOIN \u00b7 LEFT JOIN \u00b7 RIGHT JOIN \u00b7 FULL OUTER JOIN \u00b7 Fan-out problem", "qs": [{"t": "match", "tag": "Match Pairs", "q": "Match each JOIN type to what it returns:", "pairs": [["INNER JOIN", "Only rows with matches in BOTH tables"], ["LEFT JOIN", "All left-table rows; NULLs for unmatched right-table rows"], ["FULL OUTER JOIN", "All rows from both tables; NULLs where no match"], ["CROSS JOIN", "Every combination of rows from both tables (cartesian product)"]], "exp": "LEFT JOIN is the most common in product analytics \u2014 keep all users even if they have no purchases or events. Unmatched rows show NULLs in the right-table columns."}, {"t": "mcq", "tag": "SQL", "q": "You want all users, including those who have never purchased. Which JOIN keeps all users?", "opts": ["INNER JOIN purchases", "RIGHT JOIN users", "LEFT JOIN purchases ON users.id = purchases.user_id", "FULL OUTER JOIN purchases"], "ans": 2, "exp": "LEFT JOIN keeps ALL rows from the left (users) table. Users without purchases show NULL in purchase columns. Never use INNER JOIN when you need to preserve all users in the result."}, {"t": "blank", "tag": "Fill in the Blank", "q": "The ON clause in a JOIN specifies the matching ___ between the two tables \u2014 typically a primary key paired with a foreign key.", "hint": ["condition", "relationship", "index", "schema"], "ans": "condition", "exp": "ON u.user_id = p.user_id tells SQL how rows are matched. Always match primary key to foreign key. Wrong matching conditions produce incorrect results that are hard to detect."}, {"t": "tf", "tag": "True or False", "q": "An INNER JOIN can return duplicate rows if one user has multiple matching rows in the right table (called the fan-out problem).", "ans": true, "exp": "Fan-out is a critical analytical bug: if a user has 5 purchases, joining users + purchases gives 5 rows per user. Always check row counts after joins. Use COUNT(DISTINCT user_id) to detect fan-out."}]}, {"id": "n20", "ico": "\ud83d\udcdd", "lbl": "CTEs & Subqueries", "xp": 30, "topics": "WITH clause \u00b7 CTEs \u00b7 Nested subqueries \u00b7 Readability \u00b7 Multiple chained CTEs", "qs": [{"t": "mcq", "tag": "SQL", "q": "What is a CTE and what is its primary benefit?", "opts": ["Calculated Table Expression \u2014 runs faster than subqueries", "Common Table Expression \u2014 a named temporary result set that makes complex queries readable and modular", "Conditional Table Extraction \u2014 filters rows conditionally", "Clustered Table Engine \u2014 speeds up large joins"], "ans": 1, "exp": "CTE = Common Table Expression. Defined with WITH cte_name AS (...), it names an intermediate result set. CTEs make complex queries far more readable than deeply nested subqueries."}, {"t": "blank", "tag": "Fill in the Blank", "q": "A CTE begins with the keyword ___, followed by the CTE name, then the query in parentheses.", "hint": ["WITH", "FROM", "SELECT", "CREATE"], "ans": "WITH", "exp": "WITH user_cohort AS (SELECT user_id, MIN(created_at) as first_date FROM events GROUP BY user_id) SELECT ... This is the definitive pattern for complex analytical SQL."}, {"t": "tf", "tag": "True or False", "q": "A subquery in a WHERE clause executes before the outer query and produces the list of values the outer query filters against.", "ans": true, "exp": "Subqueries run first. WHERE user_id IN (SELECT user_id FROM premium_users) \u2014 the inner SELECT executes first to build the list, then the outer WHERE filters using that list."}, {"t": "order", "tag": "Put in Order", "q": "Arrange the steps to refactor a nested subquery into a clean CTE:", "items": ["Identify the innermost subquery", "Lift it out using WITH cte_name AS (...)", "Replace the inline subquery with the CTE name", "Test that both versions return identical results"], "exp": "CTEs are the professional standard for analytical SQL. Each CTE can be tested independently, making complex queries debuggable. Always prefer CTEs over deeply nested subqueries."}]}, {"id": "n21", "ico": "\ud83d\udcc5", "lbl": "Date & CASE Functions", "xp": 30, "topics": "DATE_TRUNC \u00b7 DATEDIFF \u00b7 CASE WHEN \u00b7 COALESCE \u00b7 NULLIF \u00b7 Type casting", "qs": [{"t": "mcq", "tag": "SQL", "q": "Which function truncates a timestamp to the start of its week, enabling weekly trend analysis?", "opts": ["DATE_PART('week', ts)", "DATE_TRUNC('week', ts)", "WEEK(ts)", "EXTRACT(week FROM ts)"], "ans": 1, "exp": "DATE_TRUNC('week', timestamp) truncates to the start of the containing week. Perfect for GROUP BY DATE_TRUNC('week', created_at) to aggregate events into weekly buckets."}, {"t": "match", "tag": "Match Pairs", "q": "Match each SQL function to its primary use:", "pairs": [["COALESCE", "Return the first non-NULL value from a list of arguments"], ["NULLIF", "Return NULL if two values are equal (avoids divide-by-zero)"], ["CASE WHEN", "Add conditional if-else logic to a SQL query"], ["CAST", "Convert a column from one data type to another"]], "exp": "COALESCE is especially useful: COALESCE(revenue, 0) replaces NULLs with 0 so SUM doesn't silently ignore zero-revenue users. A critical data quality function."}, {"t": "blank", "tag": "Fill in the Blank", "q": "CASE ___ plan = 'premium' THEN 'Paid' ELSE 'Free' END creates a conditional classification column.", "hint": ["WHEN", "IF", "THEN", "WHERE"], "ans": "WHEN", "exp": "Full CASE syntax: CASE WHEN condition THEN result WHEN other_condition THEN other_result ELSE default END. This is SQL's if-else statement, usable anywhere in a query."}, {"t": "tf", "tag": "True or False", "q": "DATEDIFF returns the number of complete units (days, weeks, months) between two dates in the unit you specify.", "ans": true, "exp": "DATEDIFF('day', start_date, end_date) gives days between. Used in retention queries to find users active exactly N days after their first event. The most important date function for product analytics."}]}]}, {"sec": "Section 5 \u2014 SQL", "cls": "uh-b", "name": "SQL Advanced", "guide": "Window functions and advanced patterns \u2014 the techniques that separate great analysts from good ones.", "nodes": [{"id": "n22", "ico": "\ud83e\ude9f", "lbl": "Window Functions", "xp": 35, "topics": "ROW_NUMBER \u00b7 RANK \u00b7 LAG/LEAD \u00b7 PARTITION BY \u00b7 Running totals \u00b7 Moving averages", "qs": [{"t": "mcq", "tag": "SQL", "q": "How does PARTITION BY differ from GROUP BY in a window function?", "opts": ["They are identical in behavior", "PARTITION BY divides rows into groups WITHOUT collapsing them \u2014 each row retains its own result plus the window calculation", "PARTITION BY is only valid with ORDER BY", "PARTITION BY filters rows like WHERE"], "ans": 1, "exp": "GROUP BY collapses rows into one per group. PARTITION BY keeps all rows but computes the window function separately within each partition. ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY ts) numbers each user's events independently."}, {"t": "blank", "tag": "Fill in the Blank", "q": "To access the previous row's value within a partition (e.g., last month's revenue for comparison), use the ___ window function.", "hint": ["LAG", "LEAD", "PREV", "SHIFT"], "ans": "LAG", "exp": "LAG(revenue, 1) OVER (ORDER BY month) gets the previous period's revenue. LEAD gets the next row's value. Together they enable period-over-period comparison without complex self-joins."}, {"t": "tf", "tag": "True or False", "q": "Window functions can be used directly inside a WHERE clause to filter rows.", "ans": false, "exp": "Window functions cannot appear in WHERE clauses. You must wrap the query in a CTE or subquery, then filter in the outer WHERE. This is one of the most common SQL mistakes."}, {"t": "match", "tag": "Match Pairs", "q": "Match each window function to its use:", "pairs": [["ROW_NUMBER()", "Unique sequential integer for each row within a partition"], ["RANK()", "Rank with gaps for tied values"], ["SUM() OVER", "Cumulative (running) total that accumulates across rows"], ["LAG()", "Value from the previous row within the ordered partition"]], "exp": "Window functions add computed columns without changing the row count. They are the most powerful SQL feature for time-series analysis, ranking, and running totals."}]}, {"id": "n23", "ico": "\u26a1", "lbl": "Advanced SQL Patterns", "xp": 35, "topics": "Self-joins \u00b7 SQL pivoting \u00b7 Retention queries \u00b7 Funnel SQL \u00b7 Cohort analysis in SQL", "qs": [{"t": "mcq", "tag": "SQL", "q": "To calculate D7 user retention in SQL, the standard approach is:", "opts": ["Count users active during any 7-day period", "Use a built-in RETENTION() function", "Self-join events: match users with an event on day 0 AND an event exactly 7 days later", "Average session lengths over 7 days"], "ans": 2, "exp": "Retention SQL: JOIN events e1 ON e2.user_id = e1.user_id AND DATEDIFF('day', e1.ts, e2.ts) = 7. COUNT(DISTINCT e2.user_id) / COUNT(DISTINCT e1.user_id) = D7 retention rate."}, {"t": "tf", "tag": "True or False", "q": "A SQL funnel query typically uses multiple CTEs (one per step) joined together to calculate step-by-step conversion rates.", "ans": true, "exp": "CTE step1 = users completing action A. CTE step2 = users from step1 who also completed B. JOIN on user_id and calculate step2/step1 = conversion. Each CTE is one funnel step."}, {"t": "blank", "tag": "Fill in the Blank", "q": "To pivot row-level data into columns without a PIVOT function, use ___ WHEN logic inside aggregate functions.", "hint": ["CASE", "IF", "WHEN", "PIVOT"], "ans": "CASE", "exp": "SUM(CASE WHEN plan='premium' THEN revenue ELSE 0 END) AS premium_rev pivots premium revenue into its own column. Repeat for each plan type. This is the universal SQL pivot pattern."}, {"t": "order", "tag": "Put in Order", "q": "Arrange the SQL cohort retention query steps from first to last:", "items": ["Get each user's first event date (cohort date) using MIN(created_at)", "For each subsequent period, check which cohort users were active", "Count retained users per cohort per period", "Divide retained count by cohort size for retention percentage"], "exp": "Cohort retention SQL is the most important analytical query in product analytics. Every analyst must be able to write it from scratch on a whiteboard. Practice until automatic."}]}]}, {"sec": "Section 6 \u2014 Statistics & Distributions", "cls": "uh-o", "name": "Distributions in Analytics", "guide": "Based on Chapter 4 of Rodrigues: how distributions describe user behavior, and why data shape determines the right analytical approach.", "nodes": [{"id": "n24", "ico": "\ud83d\udcd0", "lbl": "Descriptive Statistics", "xp": 25, "topics": "Mean \u00b7 Median \u00b7 Mode \u00b7 Variance \u00b7 Standard deviation \u00b7 Percentiles \u00b7 Skewness", "qs": [{"t": "mcq", "tag": "Concept", "q": "Revenue data is right-skewed. Per Rodrigues Chapter 4, which measure should you report for a typical customer?", "opts": ["Mean", "Median", "Mode", "Standard deviation"], "ans": 1, "exp": "Rodrigues Chapter 4: right-skewed data has a few very high values pulling the mean upward. Median is robust to outliers and better represents the typical user experience in stakeholder reporting."}, {"t": "match", "tag": "Match Pairs", "q": "Match each statistic to what it measures per Rodrigues Chapter 4:", "pairs": [["Mean", "Sum divided by count \u2014 sensitive to outliers"], ["Variance", "Average squared deviation from the mean"], ["Standard deviation", "Square root of variance \u2014 spread in original units"], ["P95 percentile", "Value below which 95% of data falls"]], "exp": "Rodrigues emphasizes variance as the foundation for correlation, hypothesis testing, and regression \u2014 a concept that runs through the entire book. Percentiles (P50, P95, P99) are more informative than means for skewed data."}, {"t": "tf", "tag": "True or False", "q": "A dataset with standard deviation of 0 means all values in that dataset are identical.", "ans": true, "exp": "SD = 0 means no variation. Low SD = tightly clustered around the mean. High SD = widely spread. Rodrigues uses this intuition as the entry point to understanding variance in Chapter 4."}, {"t": "blank", "tag": "Fill in the Blank", "q": "When the mean is much higher than the median, the distribution is ___ skewed (has a long right tail pulled up by outliers).", "hint": ["right", "left", "normally", "symmetrically"], "ans": "right", "exp": "Right skew = a few very high values pull the mean upward. Extremely common in revenue, session length, and social network metrics. Always check skewness before reporting means."}]}, {"id": "n25", "ico": "\ud83c\udfb2", "lbl": "Key Distributions", "xp": 25, "topics": "Normal \u00b7 Exponential \u00b7 Bivariate \u00b7 Central Limit Theorem \u00b7 Exponential decay in user data", "qs": [{"t": "mcq", "tag": "Concept", "q": "Rodrigues emphasizes the exponential distribution for product analytics because it models:", "opts": ["Normal user behavior patterns", "The time between events or the decay of user activity as users churn at a roughly constant rate", "Symmetric distributions", "Multi-modal user segments"], "ans": 1, "exp": "Chapter 4: the exponential distribution models inter-event times (time between sessions) and user churn \u2014 users leaving at a constant rate is mathematically equivalent to an exponential decay process."}, {"t": "tf", "tag": "True or False", "q": "The Central Limit Theorem states that sample means become approximately normally distributed as sample size grows, regardless of the underlying distribution's shape.", "ans": true, "exp": "CLT is fundamental to A/B testing throughout Rodrigues's book. It justifies using normal distribution statistics (z-tests, t-tests) even when the underlying behavioral data is skewed or exponentially distributed."}, {"t": "blank", "tag": "Fill in the Blank", "q": "Rodrigues uses bivariate distributions in Chapter 4 to visualize the ___ between two variables \u2014 the graphical precursor to computing a correlation coefficient.", "hint": ["relationship", "difference", "distribution", "variance"], "ans": "relationship", "exp": "A bivariate distribution (scatter plot) shows how two variables co-vary. Positive tilt = positive correlation. Rodrigues uses this visual intuition before introducing the formal correlation coefficient in Chapter 6."}, {"t": "order", "tag": "Put in Order", "q": "Arrange Rodrigues's steps for exploring a new metric distribution from Chapter 4:", "items": ["Plot a histogram to visualize the distribution shape", "Calculate mean, median, and variance", "Check for skewness, outliers, and multimodality", "Decide if a transformation (e.g., log) is needed"], "exp": "Rodrigues's exploratory framework: visualize first, then summarize, then check for anomalies, then transform if needed. Never jump straight to modeling without understanding your data's shape."}]}, {"id": "n26", "ico": "\ud83d\udcca", "lbl": "Sampling & Bias", "xp": 25, "topics": "Random sampling \u00b7 Selection bias \u00b7 Survivorship bias \u00b7 Novelty effect \u00b7 Simpson's Paradox", "qs": [{"t": "mcq", "tag": "Concept", "q": "You analyze engagement only among users who completed onboarding. Rodrigues calls this:", "opts": ["Random sampling", "Selection bias \u2014 you excluded users who churned during onboarding, creating a systematically optimistic sample", "Novelty effect", "Confirmation bias"], "ans": 1, "exp": "Selection bias is Rodrigues's key warning in Chapter 6. Studying only 'successful' users produces misleadingly optimistic results. Always ask: who is NOT in my data and why?"}, {"t": "match", "tag": "Match Pairs", "q": "Match each bias to its description per Rodrigues:", "pairs": [["Survivorship bias", "Analyzing only survivors, ignoring dropouts and failures"], ["Novelty effect", "Temporarily inflated metrics when a feature is new to users"], ["Selection bias", "Sample is systematically unrepresentative due to collection method"], ["Spurious correlation", "Two variables correlate due to a shared third cause, not each other"]], "exp": "These four biases are the main threats to valid inference covered in Chapters 1 and 6. Mastering them is prerequisite to designing clean experiments and interpreting results correctly."}, {"t": "tf", "tag": "True or False", "q": "A larger sample size always eliminates bias from an analysis.", "ans": false, "exp": "Sample size reduces variance (noise) but does NOT fix bias. A biased sample of 1 million is still biased. The design of data collection determines bias \u2014 quantity cannot compensate for systematic exclusion."}, {"t": "blank", "tag": "Fill in the Blank", "q": "When a new feature shows inflated engagement at launch due to user curiosity rather than true value, this is called the ___ effect.", "hint": ["novelty", "placebo", "hawthorne", "halo"], "ans": "novelty", "exp": "The novelty effect inflates metrics for new features. Rodrigues recommends waiting 2-4 weeks before measuring true impact. A/B testing mitigates this by comparing contemporary groups."}]}]}, {"sec": "Section 7 \u2014 Retention Science", "cls": "uh-o", "name": "Retention Metrics (Deep Dive)", "guide": "Based on Chapter 5 of Rodrigues: the Period-Age-Cohort framework, Lexis diagrams, and the complete metric development toolkit.", "nodes": [{"id": "n27", "ico": "\ud83d\udcc6", "lbl": "Period, Age & Cohort", "xp": 30, "topics": "Period effect \u00b7 Age effect \u00b7 Cohort effect \u00b7 Lexis diagram \u00b7 Standardization \u00b7 Parity progression", "qs": [{"t": "mcq", "tag": "Concept", "q": "Rodrigues borrows the Period-Age-Cohort (PAC) framework from which academic field?", "opts": ["Computer science", "Demography \u2014 the study of human populations over time", "Economics", "Marketing science"], "ans": 1, "exp": "Chapter 5 directly borrows from demographic methodology. Demographers have studied population dynamics for centuries \u2014 Rodrigues shows these tools apply directly to user cohort analysis."}, {"t": "match", "tag": "Match Pairs", "q": "Match each PAC dimension to its definition per Rodrigues:", "pairs": [["Period", "A specific calendar time window (e.g., Q2 2024)"], ["Age", "How long a user has been in the product (tenure)"], ["Cohort", "A group sharing a common start date (e.g., January signups)"], ["Lexis Diagram", "Visualization plotting cohort, age, and period simultaneously"]], "exp": "The Lexis diagram is Rodrigues's key tool: one axis is calendar time, another is user tenure, and diagonals represent cohorts. It elegantly separates the three types of time effects."}, {"t": "tf", "tag": "True or False", "q": "Rodrigues shows that period and cohort retention can give conflicting signals, making it important to examine both perspectives.", "ans": true, "exp": "Period retention might look stable even as cohort retention is declining, because newer smaller cohorts dilute the signal. Both views are needed for a complete and accurate picture of product health."}, {"t": "blank", "tag": "Fill in the Blank", "q": "Rodrigues's 'parity progression ratio' measures the proportion of users who ___ from one state or level to the next (e.g., from free to paid).", "hint": ["progress", "churn", "convert", "return"], "ans": "progress", "exp": "Parity Progression Ratios from demography measure state-to-state transitions. In products: % of free users who upgrade, % who complete onboarding step 2, % who reach the second purchase."}]}, {"id": "n28", "ico": "\ud83d\udcc9", "lbl": "Advanced Metric Development", "xp": 30, "topics": "Ratio-based metrics \u00b7 Engagement metrics \u00b7 Acquisition metrics \u00b7 Revenue metrics \u00b7 Metric trees", "qs": [{"t": "mcq", "tag": "Concept", "q": "Why does Rodrigues argue that ratio-based metrics (like DAU/MAU) are generally superior to raw count metrics (like total DAU)?", "opts": ["Ratios are easier to compute", "Raw counts grow with user acquisition, masking engagement quality. Ratios normalize for scale and reveal true behavioral patterns", "Ratios are preferred by investors", "Raw counts are harder to explain to stakeholders"], "ans": 1, "exp": "If you acquire 10x more users, raw DAU grows 10x even if engagement per user collapsed. DAU/MAU reveals whether the product is getting stickier \u2014 independent of acquisition volume."}, {"t": "tf", "tag": "True or False", "q": "Rodrigues places onboarding completion as part of acquisition metrics, not retention metrics.", "ans": true, "exp": "A user who signs up but never completes onboarding is a failed acquisition. Rodrigues: acquisition includes successfully entering the product through onboarding, not just signing up."}, {"t": "blank", "tag": "Fill in the Blank", "q": "Adjusting retention metrics to remove compositional differences between cohorts being compared (e.g., different cohort sizes) is called ___.", "hint": ["standardization", "normalization", "segmentation", "aggregation"], "ans": "standardization", "exp": "Standardization makes cohort comparisons fair. If January's cohort is 10x larger than February's, comparing raw counts is misleading. Standardize to rates for valid cross-cohort comparison."}, {"t": "match", "tag": "Match Pairs", "q": "Match each metric category to its core question per Rodrigues Chapter 5:", "pairs": [["Acquisition", "How are users finding and entering the product?"], ["Engagement", "How are users interacting while they are active?"], ["Retention", "Are users returning after their first session?"], ["Revenue", "How much are users paying and is it growing?"]], "exp": "Rodrigues's four-bucket framework from Chapter 5. Every metric you create should map to one of these four categories. This structure organizes an entire product analytics function."}]}]}, {"sec": "Section 8 \u2014 A/B Testing", "cls": "uh-o", "name": "A/B Testing", "guide": "Based on Chapter 6 of Rodrigues: the gold standard for causal inference in products, and all the ways it can go wrong.", "nodes": [{"id": "n29", "ico": "\ud83e\uddea", "lbl": "Spurious Correlation & Bias", "xp": 30, "topics": "Spurious correlation \u00b7 Selection bias \u00b7 Correlation coefficient \u00b7 Proportional comparison \u00b7 Causal inference failure", "qs": [{"t": "mcq", "tag": "Concept", "q": "Rodrigues's free-events example shows that attendees have higher retention. He argues this is most likely:", "opts": ["Proof that free events cause retention", "Spurious correlation from selection bias \u2014 already-engaged users attend events AND stay retained; a third variable drives both", "A valid causal effect worthy of investment", "Evidence to launch more free events immediately"], "ans": 1, "exp": "Classic selection bias: engaged users self-select into attending events AND staying retained. A confounder (engagement level) causes both. The event didn't cause retention. This is Chapter 6's central lesson."}, {"t": "tf", "tag": "True or False", "q": "Rodrigues defines a linear correlation coefficient between 0.3 and 0.7 as 'moderate' correlation.", "ans": true, "exp": "Rodrigues Chapter 6: high correlation > 0.7, moderate = 0.3 to 0.7, low < 0.3. A coefficient of 0.76 (the book's worked example for retention vs spending) is 'high.' These thresholds guide practical interpretation."}, {"t": "blank", "tag": "Fill in the Blank", "q": "Rodrigues warns that most proportional comparisons in web products are ___ \u2014 variables that naturally scale together without implying causation.", "hint": ["spurious", "causal", "random", "significant"], "ans": "spurious", "exp": "His 'apple under every apple tree' metaphor: many web product variables co-vary because they are both driven by overall activity. Finding unusual patterns requires theory-driven investigation."}, {"t": "order", "tag": "Put in Order", "q": "Arrange Rodrigues's steps for investigating a suspected causal relationship:", "items": ["Check for selection bias in how the groups formed", "Look for proportional baseline (does this always happen?)", "Check for dosage effects (does more X cause more Y?)", "Design a randomized experiment to test causation"], "exp": "This investigative sequence from Chapter 6 prevents jumping to causal conclusions from correlational data. Each step eliminates an alternative explanation before claiming a relationship is interesting."}]}, {"id": "n30", "ico": "\ud83c\udfb2", "lbl": "Randomization & Hypothesis Testing", "xp": 30, "topics": "Randomization \u00b7 Treatment vs control \u00b7 Null hypothesis \u00b7 p-value \u00b7 Type I/II errors \u00b7 Significance", "qs": [{"t": "mcq", "tag": "Concept", "q": "Per Rodrigues, what does randomization accomplish in an A/B test?", "opts": ["Makes the test run faster", "By randomly assigning users, it creates groups similar on ALL features \u2014 eliminating selection bias from both known and unknown confounders", "Ensures exactly equal group sizes", "Removes the need for a control group"], "ans": 1, "exp": "Rodrigues Chapter 6: 'Randomization creates two similar groups by selecting similar proportions of users on all features.' It controls for both known and unknown confounders simultaneously \u2014 no other method does this."}, {"t": "tf", "tag": "True or False", "q": "A p-value of 0.03 means there is a 3% probability that the treatment caused the observed effect.", "ans": false, "exp": "Rodrigues explicitly corrects this: p-value = P(data this extreme | null hypothesis is true). It is NOT the probability the effect is real. With p=0.03, data this extreme would occur 3% of the time if there were truly no effect."}, {"t": "match", "tag": "Match Pairs", "q": "Match each hypothesis testing concept to its definition per Rodrigues Chapter 6:", "pairs": [["Type I Error", "False positive \u2014 concluding an effect exists when it doesn't"], ["Type II Error", "False negative \u2014 missing a real effect that exists"], ["Statistical power", "1 minus Type II error rate \u2014 probability of detecting a true effect"], ["Alpha", "The Type I error rate threshold (typically 0.05)"]], "exp": "For product analytics: false positives ship bad features. False negatives miss good ones. Power >= 80% is the industry standard minimum. Always specify these before starting a test."}, {"t": "blank", "tag": "Fill in the Blank", "q": "The standard significance threshold in most A/B tests is alpha = ___, meaning a 5% false positive rate is acceptable.", "hint": ["0.05", "0.10", "0.01", "0.50"], "ans": "0.05", "exp": "Alpha = 0.05 is the industry standard. Rodrigues notes it can be adjusted: lower (0.01) for critical, irreversible decisions; higher (0.10) when false negatives are more costly than false positives."}]}, {"id": "n31", "ico": "\ud83d\udee1\ufe0f", "lbl": "A/B Testing Pitfalls", "xp": 30, "topics": "Power analysis \u00b7 Peeking problem \u00b7 No-randomness bias \u00b7 Novelty effect \u00b7 Long vs short-run effects", "qs": [{"t": "mcq", "tag": "Concept", "q": "Rodrigues labels 'differing patterns in long- and short-run effects' as an A/B test pitfall. This primarily refers to:", "opts": ["Tests that run for different durations in different markets", "The novelty effect \u2014 inflated short-run results that don't reflect true long-term behavioral change", "Underpowered tests that miss real effects", "Control group contamination from network effects"], "ans": 1, "exp": "Chapter 6 (section 6.6.4): novelty inflates short-run metrics. A feature might look successful at launch then regress to baseline. Always validate short-run A/B results with longer follow-up measurements."}, {"t": "tf", "tag": "True or False", "q": "Stopping an A/B test early as soon as the result reaches statistical significance (peeking) inflates the false positive rate.", "ans": true, "exp": "Peeking (optional stopping) is one of the most common A/B testing mistakes. Multiple testing over time inflates Type I error rates far above the nominal 5%. Always pre-commit the sample size before starting."}, {"t": "blank", "tag": "Fill in the Blank", "q": "When treatment and control groups have systematically different user compositions due to a flawed assignment mechanism (not due to the treatment), this is called a ___ bias.", "hint": ["no-randomness", "selection", "novelty", "time"], "ans": "no-randomness", "exp": "Rodrigues (section 6.6.2): No Randomness bias occurs when assignment is flawed \u2014 e.g., using even/odd user IDs can accidentally create groups with different gender or activity distributions."}, {"t": "order", "tag": "Put in Order", "q": "Arrange the correct sequence for running an A/B test per Rodrigues Chapter 6:", "items": ["Define the hypothesis and primary success metric", "Determine required sample size via power analysis", "Randomly assign users to control and treatment", "Run for the full planned duration, then analyze"], "exp": "The order is critical and non-negotiable. Defining metrics after seeing results is p-hacking. Stopping early is peeking. Both inflate false positive rates and compromise the entire test's validity."}]}]}, {"sec": "Section 9 \u2014 Predictive Methods", "cls": "uh-p", "name": "Clustering & Dimensionality Reduction", "guide": "Based on Chapter 7 of Rodrigues: k-means and PCA to understand your user population without predefined labels.", "nodes": [{"id": "n32", "ico": "\ud83d\udd2e", "lbl": "k-Means Clustering", "xp": 30, "topics": "k-Means algorithm \u00b7 Euclidean distance \u00b7 Cluster centers \u00b7 Unsupervised learning \u00b7 Whales vs wallflowers", "qs": [{"t": "mcq", "tag": "Concept", "q": "In Rodrigues's whales/wallflowers k-means example (Chapter 15), which features most separated the two clusters?", "opts": ["Revenue and country", "Number of friends, profile length, and social behavior engagement", "Login frequency and device type", "Session length and page views"], "ans": 1, "exp": "The k-means found: whales had ~7 friends (vs ~3), profile lengths of 163 characters (vs 21), and higher social behavior rates. These features validated the whale/wallflower typology from Chapter 2."}, {"t": "tf", "tag": "True or False", "q": "k-Means is an unsupervised learning method because it discovers structure in data without pre-labeled categories.", "ans": true, "exp": "Rodrigues labels k-means as unsupervised (Chapter 7, section 7.2.1). You don't tell it what a 'whale' is \u2014 it discovers natural groupings in the data purely based on feature similarity."}, {"t": "blank", "tag": "Fill in the Blank", "q": "k-Means assigns each user to the cluster whose ___ (center point) is closest, measured using Euclidean distance.", "hint": ["centroid", "median", "mean", "boundary"], "ans": "centroid", "exp": "Euclidean distance: sqrt((x1-x2)^2 + (y1-y2)^2 + ...). The algorithm assigns each point to its nearest centroid, then recalculates centroids, until no more changes occur (convergence)."}, {"t": "order", "tag": "Put in Order", "q": "Arrange the k-means algorithm steps in the correct order:", "items": ["Initialize k random centroids in feature space", "Assign each data point to its nearest centroid", "Recalculate each centroid as the mean of its assigned points", "Repeat steps 2-3 until centroid positions stabilize"], "exp": "k-means can get stuck in local optima. Rodrigues recommends running it multiple times with different random seeds and selecting the run with the lowest within-cluster sum of squares."}]}, {"id": "n33", "ico": "\ud83d\udcc9", "lbl": "PCA", "xp": 30, "topics": "Principal Components Analysis \u00b7 Variance explained \u00b7 Rotation \u00b7 Biplot \u00b7 Dimensionality reduction \u00b7 Log transformation", "qs": [{"t": "mcq", "tag": "Concept", "q": "In Rodrigues's whales/wallflowers PCA example, the first principal component (PC1) explained approximately what percentage of total variance?", "opts": ["10%", "30%", "60%", "90%"], "ans": 2, "exp": "Chapter 7: PC1 explains ~60%, PC2 ~30%, PC3 ~10%. The first two components together explain ~90% of variance, meaning a 2D biplot captures almost all the information in the 3-variable dataset."}, {"t": "tf", "tag": "True or False", "q": "Rodrigues recommends log-transforming right-skewed variables (like profile length and friend counts) before applying PCA.", "ans": true, "exp": "Chapter 15: 'A general rule of thumb: make numeric variables as close to normal as possible' before PCA. Log transforms reduce right skewness. Also scale and center the data so variable magnitudes don't dominate."}, {"t": "match", "tag": "Match Pairs", "q": "Match each PCA output to what it reveals per Rodrigues Chapter 7:", "pairs": [["Proportion of variance explained", "How much total information each component captures"], ["Component rotation (coefficients)", "Which original variables contribute most to each component"], ["Biplot point positions", "How individual users compare to each other in component space"], ["Scree plot", "Visual showing variance by component \u2014 used to choose number of components"]], "exp": "Rodrigues's PCA interpretation order from Chapter 7: size (how much does it explain?) \u2192 rotation (what does it mean?) \u2192 clustering (who are the outliers?). Always interpret in this sequence."}, {"t": "blank", "tag": "Fill in the Blank", "q": "In Rodrigues's biplot of PC1 vs PC2, the whales were primarily on the ___ side of the plot, well separated from the wallflowers.", "hint": ["right", "left", "top", "bottom"], "ans": "right", "exp": "Chapter 7, Figure 7.3: 'The whales are primarily on the right side of the plot \u2014 observations 6, 7, 11, 13, 15, 16, and 20.' The biplot visually confirmed and validated the theoretical whale/wallflower typology."}]}]}, {"sec": "Section 9 \u2014 Predictive Methods", "cls": "uh-p", "name": "Regression & Predictive Modeling", "guide": "Based on Chapter 8 of Rodrigues: OLS regression, logistic regression, decision trees, SVMs, and model validation.", "nodes": [{"id": "n34", "ico": "\ud83d\udcc8", "lbl": "Linear & Logistic Regression", "xp": 30, "topics": "OLS regression \u00b7 Logistic regression \u00b7 Residuals \u00b7 R-squared \u00b7 Binary prediction \u00b7 Sigmoid function", "qs": [{"t": "mcq", "tag": "Concept", "q": "Rodrigues says linear regression is often called OLS because:", "opts": ["It uses only one variable", "OLS (Ordinary Least Squares) is the most common estimation method \u2014 it minimizes the sum of squared residuals", "It assumes a linear outcome by definition", "It was invented at Oxford"], "ans": 1, "exp": "OLS = Ordinary Least Squares. The algorithm finds coefficients that minimize the sum of (actual - predicted)^2. Rodrigues emphasizes intuitive understanding: the line fits between points by minimizing squared distances."}, {"t": "tf", "tag": "True or False", "q": "Logistic regression outputs a probability between 0 and 1, making it appropriate for binary outcomes like churn prediction.", "ans": true, "exp": "Rodrigues covers logistic regression as the standard tool for binary classification (churn/no-churn, convert/not-convert). The sigmoid function maps any linear combination to a probability in (0,1)."}, {"t": "blank", "tag": "Fill in the Blank", "q": "In regression, the difference between the actual observed value and the model's predicted value for that observation is called a ___.", "hint": ["residual", "coefficient", "intercept", "variance"], "ans": "residual", "exp": "Residual = actual - predicted. OLS minimizes the sum of squared residuals. Plotting residuals is the primary diagnostic for checking whether model assumptions are met."}, {"t": "match", "tag": "Match Pairs", "q": "Match each model type to its appropriate prediction task per Rodrigues Chapter 8:", "pairs": [["Linear regression", "Predict a continuous numeric outcome (e.g., revenue amount)"], ["Logistic regression", "Predict a binary outcome (e.g., churn yes/no, purchase yes/no)"], ["k-Nearest Neighbor", "Classify by finding the k most similar labeled examples"], ["Decision Tree", "Create interpretable if-then rules to classify or predict"]], "exp": "Rodrigues's model selection framework from Chapter 8. The most important skill is knowing WHEN to use each model, not just how to implement it."}]}, {"id": "n35", "ico": "\ud83c\udf33", "lbl": "Trees & SVMs", "xp": 30, "topics": "Decision tree \u00b7 Information gain \u00b7 Support Vector Machine \u00b7 Kernel trick \u00b7 Overfitting \u00b7 Non-linearity", "qs": [{"t": "mcq", "tag": "Concept", "q": "What is the main advantage of decision trees over linear regression for behavioral product data, per Rodrigues?", "opts": ["Decision trees require less data", "Decision trees capture non-linear relationships and feature interactions that linear regression cannot", "Decision trees always have better accuracy", "Decision trees are faster to compute"], "ans": 1, "exp": "Chapter 8: decision trees partition feature space into rectangular regions, capturing non-linear patterns and interaction effects automatically. They are also interpretable \u2014 you can read the if-then rules."}, {"t": "tf", "tag": "True or False", "q": "Support Vector Machines use a 'kernel trick' to efficiently handle non-linearly separable data by operating in a higher-dimensional transformed space.", "ans": true, "exp": "Rodrigues covers SVMs in Chapter 8. The kernel trick avoids explicit high-dimensional transformation \u2014 it computes inner products in the transformed space efficiently, enabling non-linear classification."}, {"t": "blank", "tag": "Fill in the Blank", "q": "A model that performs well on training data but poorly on new test data is said to be ___ \u2014 it has memorized noise rather than learned patterns.", "hint": ["overfitting", "underfitting", "regularized", "biased"], "ans": "overfitting", "exp": "Overfitting = memorizing training data including noise. The model captures patterns specific to that dataset that don't generalize. Cross-validation is Rodrigues's primary tool for detecting overfitting."}, {"t": "order", "tag": "Put in Order", "q": "Arrange the model evaluation steps Rodrigues recommends in Chapter 8:", "items": ["Split data into training and held-out test sets", "Train the model on the training set only", "Evaluate on the test set using precision, recall, and F1-score", "Use k-fold cross-validation for a more robust performance estimate"], "exp": "k-fold cross-validation is more robust than a single train/test split. Split data into k folds, train on k-1, test on 1, rotate k times. Average the k test scores for a stable, low-variance performance estimate."}]}, {"id": "n36", "ico": "\u2705", "lbl": "Model Validation", "xp": 30, "topics": "Train/test split \u00b7 k-Fold cross-validation \u00b7 Precision \u00b7 Recall \u00b7 F1-score \u00b7 LOOCV", "qs": [{"t": "mcq", "tag": "Concept", "q": "Rodrigues's definitions: precision measures ___ and recall measures ___.", "opts": ["Speed and accuracy", "Of all predicted positives, how many are correct; of all actual positives, how many were found", "Training error and test error", "The model's R-squared on training and test sets"], "ans": 1, "exp": "Chapter 8: Precision = TP/(TP+FP) \u2014 accuracy among predicted positives. Recall = TP/(TP+FN) \u2014 how many true positives the model found. For churn prediction, recall is usually prioritized (catch all churners)."}, {"t": "tf", "tag": "True or False", "q": "Leave-One-Out Cross-Validation (LOOCV) trains n separate models, each leaving out exactly one observation as the test case.", "ans": true, "exp": "Rodrigues covers LOOCV in Chapter 8. It is computationally expensive for large datasets but gives the least biased estimate of generalization error. k-fold (k=10) is the practical alternative."}, {"t": "blank", "tag": "Fill in the Blank", "q": "The F1-score is the ___ mean of precision and recall, correctly penalizing extreme imbalances between them.", "hint": ["harmonic", "arithmetic", "geometric", "weighted"], "ans": "harmonic", "exp": "Harmonic mean: 2*(P*R)/(P+R). If precision=1.0 and recall=0.0, F1=0. The harmonic mean correctly penalizes this case, unlike the arithmetic mean which would misleadingly give 0.5."}, {"t": "match", "tag": "Match Pairs", "q": "Match each validation concept to its definition per Rodrigues Chapter 8:", "pairs": [["k-Fold Cross-Validation", "Train on k-1 folds, test on remaining fold, rotate k times"], ["LOOCV", "Leave one observation out, repeat n times"], ["Precision", "True positives divided by all predicted positives"], ["Recall", "True positives divided by all actual positives"]], "exp": "Rodrigues's complete validation framework. Always validate on held-out data. Never trust in-sample accuracy \u2014 overfitted models look perfect in training but fail in production."}]}]}, {"sec": "Section 10 \u2014 Population Forecasting", "cls": "uh-p", "name": "Population Projection", "guide": "Based on Chapter 9 of Rodrigues: demographic tools for forecasting how your user population evolves over time.", "nodes": [{"id": "n37", "ico": "\ud83d\udd22", "lbl": "Transition Matrices", "xp": 35, "topics": "User states \u00b7 Transition probabilities \u00b7 Multistate model \u00b7 Snowmobile example \u00b7 Reading the matrix", "qs": [{"t": "mcq", "tag": "Concept", "q": "In Rodrigues's snowmobile website transition matrix (Chapter 9), which state is absorbing \u2014 meaning users cannot exit once they enter it?", "opts": ["New user", "Active user", "Lost user", "Dead user"], "ans": 3, "exp": "Chapter 9: 'Dead users' is the absorbing state. Once classified as dead, users cannot return. All other states (new, active, paying, lost) are transient \u2014 users can move between them."}, {"t": "tf", "tag": "True or False", "q": "Rodrigues reads the transition matrix as: the user starts in the column state and transitions to the row state.", "ans": true, "exp": "Chapter 9: 'Users start in a column state and move into the row state.' The matrix entry at row i, column j = probability of transitioning from state j to state i. This direction can be counterintuitive."}, {"t": "blank", "tag": "Fill in the Blank", "q": "Rodrigues describes the transition matrix as a 'multidimensional version of a user ___' showing where users get stuck in their product journey.", "hint": ["funnel", "segment", "cohort", "dashboard"], "ans": "funnel", "exp": "The transition matrix extends the funnel concept to multi-directional flows. Users can move forward, backward, or stay in place \u2014 unlike a funnel's linear one-way structure. More realistic and more diagnostic."}, {"t": "order", "tag": "Put in Order", "q": "Arrange the elements needed to build a transition matrix per Rodrigues Chapter 9:", "items": ["Define all possible user states in the model", "Establish the initial population count in each state", "Calculate transition probabilities between all state pairs", "Apply the matrix to project future population distributions"], "exp": "Once you have the transition matrix, future populations are projected by matrix multiplication: P(t+1) = T * P(t). Apply repeatedly to forecast multiple periods ahead."}]}, {"id": "n38", "ico": "\ud83d\udce1", "lbl": "Population Projection", "xp": 35, "topics": "Leslie matrix \u00b7 Exponential growth \u00b7 User death by a thousand cuts \u00b7 Steady-state \u00b7 Population forecasting", "qs": [{"t": "mcq", "tag": "Concept", "q": "Rodrigues's 'user death by a thousand cuts' concept describes:", "opts": ["Users dying from app crashes", "Gradual user churn driven by many small friction points \u2014 no single catastrophic failure, but compounding small dissatisfactions", "Users reducing spending over time", "A sudden mass churn event after a product change"], "ans": 1, "exp": "Chapter 9: even small per-period transition probabilities to the 'dead' state compound into large long-run user loss. This is why fixing small friction points matters \u2014 their effects accumulate dramatically."}, {"t": "tf", "tag": "True or False", "q": "If the transition probability to the paying state is higher than to any other state, the steady-state distribution will have a larger paying user proportion.", "ans": true, "exp": "Chapter 9: the steady-state distribution (where the population stabilizes after many periods) is determined by the largest eigenvalue of the transition matrix. Rodrigues uses this to identify long-run product viability."}, {"t": "blank", "tag": "Fill in the Blank", "q": "Rodrigues adapts the demographic ___ matrix (which models age-structured population growth) to model user state transitions in products.", "hint": ["Leslie", "Markov", "Cohort", "Transition"], "ans": "Leslie", "exp": "The Leslie matrix (from ecology and demography) models populations with birth and death rates by age class. Rodrigues adapts it to web analytics: 'birth' = new user acquisition, 'death' = permanent churn."}, {"t": "match", "tag": "Match Pairs", "q": "Match each population projection insight to what Rodrigues says it reveals per Chapter 9:", "pairs": [["Proportion of paying users over time", "Whether the product is becoming more or less monetizable"], ["Bottlenecks in the matrix", "Where users are getting stuck and not progressing"], ["Exponential growth check", "Whether new user acquisition outpaces churn"], ["Steady-state distribution", "The long-run equilibrium proportion of users in each state"]], "exp": "The transition matrix gives you multiple diagnostic lenses simultaneously: forecasting, bottleneck identification, growth assessment, and long-run stability analysis. More powerful than any single funnel view."}]}]}, {"sec": "Section 11 \u2014 Causal Inference", "cls": "uh-p", "name": "DiD & Natural Experiments", "guide": "Based on Chapter 10 of Rodrigues: estimating causal effects when randomized experiments are impossible.", "nodes": [{"id": "n39", "ico": "\ud83d\udd2d", "lbl": "Natural Experiments", "xp": 35, "topics": "Natural experiment \u00b7 When A/B fails \u00b7 ATT \u00b7 Counterfactual \u00b7 Causal identification", "qs": [{"t": "mcq", "tag": "Concept", "q": "Rodrigues says A/B testing fails in three situations. Which of these is one of them?", "opts": ["When sample sizes are too large", "When studying broader social phenomena where individual randomization would disrupt network effects", "When the primary metric is continuous", "When the expected effect size is large"], "ans": 1, "exp": "Chapter 10: A/B fails for (1) broader social phenomena (network spillover), (2) historical actions (can't randomize past), (3) no infrastructure for random assignment. Natural experiments fill these gaps."}, {"t": "tf", "tag": "True or False", "q": "A natural experiment exploits randomization that occurs naturally in the world \u2014 not designed by the researcher \u2014 to create valid treatment and control groups.", "ans": true, "exp": "Rodrigues Chapter 10: natural experiments exploit exogenous variation \u2014 policy changes, geographic boundaries, arbitrary cutoffs \u2014 that create comparison groups not chosen by the analyst or the subjects."}, {"t": "blank", "tag": "Fill in the Blank", "q": "The causal quantity Rodrigues estimates in his DiD commercial example is the ATT \u2014 Average Treatment effect on the ___.", "hint": ["Treated", "Total", "Test", "Time"], "ans": "Treated", "exp": "ATT = Average Treatment Effect on the Treated. The ATT answers: 'How much did the treatment change outcomes for the specific units that actually received it?' \u2014 not for the entire population."}, {"t": "order", "tag": "Put in Order", "q": "Arrange the conditions required for valid causal inference from a natural experiment per Rodrigues:", "items": ["Treatment assignment must be as-good-as-random", "A valid control group must exist that was unaffected by the treatment", "The parallel trends assumption must hold in the pre-treatment period", "Post-treatment differences are attributed to the treatment"], "exp": "The parallel trends assumption is the most critical and commonly violated. Always validate it graphically by plotting pre-treatment trends for both groups before claiming a causal effect."}]}, {"id": "n40", "ico": "\ud83d\udcca", "lbl": "Difference-in-Differences", "xp": 35, "topics": "DiD estimator \u00b7 Parallel trends \u00b7 Treated and control markets \u00b7 DiD regression \u00b7 Interpreting ATT", "qs": [{"t": "mcq", "tag": "Concept", "q": "In Rodrigues's commercial campaign DiD example, the ATT of 882 downloads means:", "opts": ["882 total downloads in the treated market", "The promotion caused 882 more downloads than would have occurred without the promotion", "882 users clicked on the commercial", "Downloads increased by 882% in treated markets"], "ans": 1, "exp": "Chapter 10 (section 10.4.3.5): 'Our promotion caused 882 more downloads than would have occurred without the promotion.' The DiD compares treated vs control, before vs after \u2014 the double difference removes confounds."}, {"t": "tf", "tag": "True or False", "q": "In a DiD regression, the key coefficient of interest is the interaction term between the treated indicator and the post-treatment time indicator.", "ans": true, "exp": "Rodrigues Table 10.4: the treated:time interaction coefficient (882, p < 2e-16) IS the ATT. The main effects of 'treated' and 'time' capture baseline differences and time trends that are differenced away."}, {"t": "match", "tag": "Match Pairs", "q": "Match each DiD regression coefficient to what it captures per Rodrigues Table 10.4:", "pairs": [["Intercept", "Baseline outcome in the control group before treatment"], ["treated coefficient", "Pre-existing difference between treated and control groups"], ["time coefficient", "The general time trend affecting both groups equally"], ["treated:time interaction", "The ATT \u2014 causal effect of treatment above and beyond trends"]], "exp": "Each DiD coefficient has a specific causal interpretation. Getting this right is what distinguishes a causal analyst from a descriptive one. The interaction term is ALWAYS the causal estimate."}, {"t": "blank", "tag": "Fill in the Blank", "q": "The parallel ___ assumption requires that treated and control groups would have followed the same trajectory if no treatment had occurred.", "hint": ["trends", "means", "variances", "distributions"], "ans": "trends", "exp": "Parallel trends is the identifying assumption of DiD. Rodrigues says: 'Always visualize pre-treatment trends for both groups to validate this assumption graphically before claiming causation.'"}]}]}, {"sec": "Section 11 \u2014 Causal Inference", "cls": "uh-p", "name": "Regression Discontinuity & ITS", "guide": "Based on Chapter 11 of Rodrigues: two powerful quasi-experimental designs for when randomization is impossible.", "nodes": [{"id": "n41", "ico": "\ud83d\udccd", "lbl": "Regression Discontinuity", "xp": 35, "topics": "RD design \u00b7 Running variable \u00b7 Cutoff \u00b7 Local randomization \u00b7 Continuity assumption \u00b7 Manipulation test", "qs": [{"t": "mcq", "tag": "Concept", "q": "In a Regression Discontinuity design, causal identification comes from:", "opts": ["Comparing randomly assigned treatment and control groups", "Units just above and below an arbitrary cutoff being similar but receiving different treatments", "Using the DiD estimator applied locally", "Propensity score matching near the threshold"], "ans": 1, "exp": "Chapter 11: RD exploits an arbitrary cutoff in a running variable. Units near the cutoff are 'as good as randomly assigned' to treatment or control \u2014 they are almost identical except for which side they fall on."}, {"t": "tf", "tag": "True or False", "q": "In Rodrigues's badge example, the RD design estimates the causal effect of earning a badge by comparing users who just earned one versus users who just missed the threshold.", "ans": true, "exp": "Chapter 11, section 11.2: comparing barely-earners to barely-missers isolates the causal badge effect. Both groups are nearly identical in all other respects \u2014 the only difference is earning the badge."}, {"t": "blank", "tag": "Fill in the Blank", "q": "The continuous variable that determines whether a unit falls above or below the RD threshold is called the ___ variable.", "hint": ["running", "forcing", "cutoff", "treatment"], "ans": "running", "exp": "The running variable (forcing variable) determines treatment assignment. Example: 'total points' where users above 100 earn a badge. Rodrigues analyzes whether this is manipulable in section 11.1.3."}, {"t": "order", "tag": "Put in Order", "q": "Arrange the steps to implement an RD analysis per Rodrigues Chapter 11:", "items": ["Identify an arbitrary cutoff that determines treatment assignment", "Check the density of the running variable for manipulation near the cutoff", "Estimate the treatment effect at the cutoff using local regression", "Test for jumps in other variables at the cutoff as a falsification check"], "exp": "Step 2 (manipulation check) is critical: if subjects can manipulate their running variable to just clear the threshold, the local randomization assumption fails and the RD design is invalid."}]}, {"id": "n42", "ico": "\u23f1\ufe0f", "lbl": "Interrupted Time Series & ITS", "xp": 35, "topics": "ITS design \u00b7 Seasonality decomposition \u00b7 Time-series regression \u00b7 Pre/post comparison \u00b7 Single-group design", "qs": [{"t": "mcq", "tag": "Concept", "q": "Interrupted Time Series is most appropriate when:", "opts": ["You have a treatment group and a control group over time", "A treatment affects all units at a specific time point (no control group possible) and you compare pre vs post trends", "You want to compare two product variants", "You only have cross-sectional data from one period"], "ans": 1, "exp": "Chapter 11: ITS analyzes a single group before and after an intervention that affects everyone simultaneously. Example: a country-wide policy change where every user is treated \u2014 no contemporaneous control exists."}, {"t": "tf", "tag": "True or False", "q": "Rodrigues covers seasonality decomposition as part of ITS because failing to remove seasonal patterns confounds the treatment effect estimate.", "ans": true, "exp": "Section 11.4: if your metric has seasonal variation (e.g., higher in December), a naive before-after comparison conflates treatment effects with seasonal effects. Always decompose seasonality before ITS analysis."}, {"t": "blank", "tag": "Fill in the Blank", "q": "In ITS regression, the interaction between the treatment ___ and the post-treatment time trend is the key coefficient estimating whether the treatment changed the trajectory.", "hint": ["indicator", "variable", "group", "period"], "ans": "indicator", "exp": "The treatment indicator x time interaction tests whether the slope changed after the interruption. A significant interaction = the treatment changed the trend, not just the level \u2014 the critical distinction in ITS."}, {"t": "match", "tag": "Match Pairs", "q": "Match each causal method from Chapters 10-11 to its core identifying assumption:", "pairs": [["Difference-in-Differences", "Parallel pre-treatment trends between treated and control groups"], ["Regression Discontinuity", "Continuity \u2014 units just above and below the cutoff are comparable"], ["Interrupted Time Series", "The pre-treatment trend would have continued unchanged without the intervention"], ["Natural Experiment", "Treatment assignment is as-good-as-random due to external circumstances"]], "exp": "Each causal method has a distinct identifying assumption. Violating the assumption invalidates the causal claim. Always test and validate the key assumption before reporting causal findings."}]}]}, {"sec": "Section 12 \u2014 Matching & Uplift", "cls": "uh-p", "name": "Statistical Matching", "guide": "Based on Chapter 12 of Rodrigues: constructing comparable groups from observational data to estimate causal effects.", "nodes": [{"id": "n43", "ico": "\u2696\ufe0f", "lbl": "Propensity Score Matching", "xp": 35, "topics": "Statistical matching \u00b7 Propensity scores \u00b7 Coverage \u00b7 Omitted variable bias \u00b7 Hill criteria \u00b7 Caliper matching", "qs": [{"t": "mcq", "tag": "Concept", "q": "What does propensity score matching accomplish according to Rodrigues?", "opts": ["Randomly assigns users to groups", "Creates comparable treatment and control groups from observational data by matching units with similar probabilities of receiving treatment", "Predicts which users will churn next month", "Increases the statistical power of a test"], "ans": 1, "exp": "Chapter 12: matching creates synthetic comparison groups. To estimate the effect of adding a profile picture, match treated users (added picture) with similar untreated users \u2014 then compare their outcomes."}, {"t": "tf", "tag": "True or False", "q": "Rodrigues concludes that matching can generate statements like 'adding a profile picture causes a 5% increase in retention' from purely observational data.", "ans": true, "exp": "Chapter 12: 'If proper coverage and adequate confounding variables are added, you can generate insights such as adding a profile picture causes a 5% increase in user retention.' But he immediately flags the limitations."}, {"t": "blank", "tag": "Fill in the Blank", "q": "Rodrigues warns that matching is not optimized for ___ datasets, requiring the analyst to draw an adequate sample rather than using all available data.", "hint": ["large", "small", "clean", "structured"], "ans": "large", "exp": "Chapter 12: 'Matching is not optimized for large data sets.' Unlike regression, which scales to millions of rows trivially, matching algorithms become computationally prohibitive at scale."}, {"t": "order", "tag": "Put in Order", "q": "Arrange Bradford Hill's criteria (referenced by Rodrigues Chapter 12) from weakest to strongest evidence for causation:", "items": ["Statistical association exists between variables", "Temporality: the cause precedes the effect in time", "Dose-response: more treatment produces more effect", "Experimental replication: the effect is found in a randomized experiment"], "exp": "Rodrigues uses Hill's criteria as a heuristic checklist for building causal arguments from observational data when formal experiments are not possible. More criteria met = stronger causal claim."}]}]}, {"sec": "Section 12 \u2014 Matching & Uplift", "cls": "uh-p", "name": "Uplift Modeling", "guide": "Based on Chapter 13 of Rodrigues: the advanced technique that identifies which users actually respond to your intervention.", "nodes": [{"id": "n44", "ico": "\ud83d\ude80", "lbl": "Uplift vs Prediction", "xp": 40, "topics": "Uplift definition \u00b7 Four user types \u00b7 Sure Things \u00b7 Lost Causes \u00b7 Persuadables \u00b7 Do Not Disturb", "qs": [{"t": "mcq", "tag": "Concept", "q": "Per Rodrigues Chapter 13, what is 'uplift'?", "opts": ["The increase in revenue from a new feature", "The individual causal effect of a treatment \u2014 how much the treatment changes an individual's outcome compared to not treating them", "The difference between two A/B test variant means", "The probability a user will churn"], "ans": 1, "exp": "Uplift = individual-level treatment effect. A standard predictive model estimates P(outcome). An uplift model estimates P(outcome|treated) - P(outcome|control) \u2014 the incremental causal impact of the treatment."}, {"t": "match", "tag": "Match Pairs", "q": "Match each of Rodrigues's four uplift user types to their behavior:", "pairs": [["Sure Things", "Convert regardless of treatment \u2014 wasting resources on them"], ["Lost Causes", "Will not convert regardless of treatment \u2014 also wasted resources"], ["Persuadables", "Convert ONLY with treatment \u2014 the target audience for interventions"], ["Do Not Disturb", "Convert without treatment but NOT with it \u2014 treatment actively harms them"]], "exp": "This four-type taxonomy is Rodrigues's core insight from Chapter 13. Standard prediction cannot distinguish between these types. Uplift modeling specifically targets Persuadables to maximize ROI."}, {"t": "tf", "tag": "True or False", "q": "Rodrigues argues that treating Sure Things (who would convert anyway) wastes marketing resources and that uplift modeling prevents this mistake.", "ans": true, "exp": "Chapter 13: standard models recommend treating Sure Things (high predicted conversion). But treatment is wasted on them \u2014 they convert anyway. Uplift models identify only those for whom treatment makes a causal difference."}, {"t": "blank", "tag": "Fill in the Blank", "q": "Unlike standard prediction, uplift modeling estimates ___ treatment effects \u2014 recognizing that different users respond differently to the same intervention.", "hint": ["heterogeneous", "average", "causal", "marginal"], "ans": "heterogeneous", "exp": "Treatment Effect Heterogeneity: different users respond differently to the same treatment. Uplift models estimate this heterogeneity, enabling personalized targeting instead of one-size-fits-all campaigns."}]}, {"id": "n45", "ico": "\ud83c\udf32", "lbl": "Uplift Methods", "xp": 40, "topics": "Two-model approach \u00b7 Interaction model \u00b7 Tree-based uplift \u00b7 Uplift forest \u00b7 LaLonde benchmark dataset", "qs": [{"t": "mcq", "tag": "Concept", "q": "In Rodrigues's two-model uplift approach, how is the individual uplift score calculated?", "opts": ["Uplift = predicted probability from the treatment group model alone", "Uplift = P(outcome|treatment model) minus P(outcome|control model) \u2014 the difference from two separately trained models", "Uplift = the interaction coefficient from a single logistic regression", "Uplift = the difference in AUC between treatment and control models"], "ans": 1, "exp": "Chapter 13: train model 1 on treatment group data, model 2 on control group data. For each user, compute both predictions and subtract: P(outcome|M2) from P(outcome|M1). The difference IS the estimated individual uplift."}, {"t": "tf", "tag": "True or False", "q": "Rodrigues uses the LaLonde dataset as a benchmark because it has a known ground-truth treatment effect from a real randomized experiment.", "ans": true, "exp": "Chapter 13: the LaLonde dataset (from a job training program RCT) provides a known experimental ATT. This makes it ideal for benchmarking uplift models \u2014 you can check if the method recovers the true effect."}, {"t": "blank", "tag": "Fill in the Blank", "q": "Rodrigues covers ___ forests as an advanced uplift method that modifies the splitting criterion to optimize for treatment effect differences between leaves, not prediction accuracy.", "hint": ["uplift", "causal", "random", "conditional"], "ans": "uplift", "exp": "Section 13.5.6: uplift forests change the tree-splitting objective from maximizing prediction accuracy to maximizing the difference in treatment effects between child nodes. This directly optimizes for finding Persuadables."}, {"t": "order", "tag": "Put in Order", "q": "Arrange Rodrigues's uplift modeling approaches from simplest to most complex:", "items": ["Two-model approach (two separate standard predictive models)", "Interaction model (one model with treatment variable and interactions)", "Tree-based uplift (modified decision tree splitting criterion)", "Causal Conditional Inference Forest (specialized uplift forest)"], "exp": "Rodrigues's progression from Chapter 13. Start with the two-model approach as your baseline. More sophisticated methods may improve performance but at the cost of interpretability and implementation complexity."}]}]}, {"sec": "Section 13 \u2014 Product Frameworks & Senior PA", "cls": "uh-p", "name": "Product Frameworks", "guide": "The strategic frameworks top analysts use to structure thinking, set goals, and measure what matters.", "nodes": [{"id": "n46", "ico": "\u2b50", "lbl": "North Star Metric", "xp": 25, "topics": "NSM definition \u00b7 Leading vs lagging indicators \u00b7 Input metrics \u00b7 Counter-metrics \u00b7 NSM examples", "qs": [{"t": "mcq", "tag": "Concept", "q": "Which is the best North Star Metric for a music streaming app?", "opts": ["Total revenue", "Monthly Active Users", "Minutes of music listened per month", "Number of songs in the library"], "ans": 2, "exp": "Minutes listened captures engagement AND value delivered \u2014 it leads revenue rather than lagging it. MAU is a lagging indicator; library size doesn't capture the value exchange between product and user at all."}, {"t": "match", "tag": "Match Pairs", "q": "Match each company to its North Star Metric:", "pairs": [["Airbnb", "Nights booked"], ["Spotify", "Time spent listening"], ["Uber", "Trips completed per week"], ["LinkedIn", "Monthly professionals reached and engaged"]], "exp": "Each NSM reflects the core value exchange. Airbnb delivers stays; Uber delivers trips. The NSM captures the moment value is created for both user and business \u2014 not just activity."}, {"t": "tf", "tag": "True or False", "q": "The North Star Metric should be a lagging metric like annual revenue because it is the truest measure of business success.", "ans": false, "exp": "The NSM should lead revenue, not lag it. Revenue is the outcome. The NSM is the engine that produces revenue. Using revenue as your NSM incentivizes short-term thinking that damages long-term health."}, {"t": "blank", "tag": "Fill in the Blank", "q": "The controllable drivers and levers that move the North Star Metric forward are called ___ metrics.", "hint": ["input", "counter", "lagging", "vanity"], "ans": "input", "exp": "Input metrics are the operational levers: driver availability and app load time drive Uber's trips. Improving input metrics is what product and engineering teams actually work on week-to-week."}]}, {"id": "n47", "ico": "\ud83c\udff4", "lbl": "AARRR & HEART", "xp": 25, "topics": "AARRR \u00b7 Pirate metrics \u00b7 Aha moment \u00b7 Activation \u00b7 HEART framework \u00b7 OKRs", "qs": [{"t": "match", "tag": "Match Pairs", "q": "Match each AARRR stage to its core question:", "pairs": [["Acquisition", "How do users find the product?"], ["Activation", "Do they experience the core value (aha moment) in the first session?"], ["Retention", "Do they return after their first session?"], ["Revenue", "Do they pay, and is it growing?"]], "exp": "AARRR (Pirate Metrics) by Dave McClure. Most startups leak most at Activation \u2014 users sign up but never experience the product's core value. Fix activation before scaling acquisition."}, {"t": "mcq", "tag": "Concept", "q": "Facebook's aha moment was defined as adding 7 friends within 10 days of signup. This is best described as:", "opts": ["A revenue milestone", "The activation event that most strongly predicted long-term retention \u2014 the moment users experienced core social value", "A retention metric for day 10", "A growth hack to increase friend connections"], "ans": 1, "exp": "Activation = the specific action that most predicts long-term retention. Finding your product's aha moment is one of the most valuable analytical projects a PA can lead. It must be discovered through data."}, {"t": "tf", "tag": "True or False", "q": "In Google's HEART framework, Task Success measures whether users can successfully complete key product workflows.", "ans": true, "exp": "HEART: Happiness, Engagement, Adoption, Retention, Task Success. Task Success measures completion rates, error rates, and time-on-task. It is the most UX-focused dimension of the framework."}, {"t": "blank", "tag": "Fill in the Blank", "q": "In OKRs, Google's philosophy holds that consistently achieving 100% of Key Results means the goals were not ___ enough.", "hint": ["ambitious", "measurable", "specific", "actionable"], "ans": "ambitious", "exp": "Google's standard: 70% OKR achievement is on-target for stretch goals. 100% means you played it safe. Ambitious OKRs drive stretch performance even when not fully achieved."}]}, {"id": "n48", "ico": "\ud83d\udcf1", "lbl": "Dashboards & Storytelling", "xp": 25, "topics": "Dashboard hierarchy \u00b7 KPI cards \u00b7 Audience-first design \u00b7 Pyramid Principle \u00b7 Chart types \u00b7 Data narrative", "qs": [{"t": "mcq", "tag": "Concept", "q": "The most important rule for a product analytics dashboard, per best practice:", "opts": ["Include every available metric to be comprehensive", "Lead with 3-5 critical KPIs \u2014 signal over noise. Details are secondary and accessible via drill-down", "Always show data at daily granularity for maximum detail", "Use a unique color for every metric for easy differentiation"], "ans": 1, "exp": "The best dashboards answer 'Is the business healthy?' in 5 seconds. More metrics = more confusion. Ruthlessly prioritize the signal. Design for the question the stakeholder actually needs to answer."}, {"t": "match", "tag": "Match Pairs", "q": "Match each chart type to its best use case:", "pairs": [["Line chart", "Trends over time"], ["Bar chart", "Comparing categories at one point in time"], ["Scatter plot", "Correlation or relationship between two numeric variables"], ["Funnel chart", "Step-by-step conversion rates through a process"]], "exp": "Chart choice matters enormously for communication. Using a pie chart for more than 3 categories, or a bar chart for time trends, are common mistakes that mislead stakeholders."}, {"t": "tf", "tag": "True or False", "q": "A dashboard designed for a CEO and one for an engineering team should have identical content and structure.", "ans": false, "exp": "Always design for your audience. CEOs need high-level KPIs and trends with business context. Engineers need granular, real-time operational metrics. Different audiences require fundamentally different views."}, {"t": "blank", "tag": "Fill in the Blank", "q": "Barbara Minto's ___ Principle says to structure a presentation by leading with the main insight first, then supporting evidence \u2014 rather than building up to the conclusion.", "hint": ["Pyramid", "MECE", "Issue", "Hypothesis"], "ans": "Pyramid", "exp": "Pyramid Principle: answer first, then support it. Busy stakeholders want the conclusion immediately \u2014 not after 20 slides of methodology. 'We can increase revenue 15% by fixing checkout' comes first."}]}]}, {"sec": "Section 13 \u2014 Product Frameworks & Senior PA", "cls": "uh-p", "name": "Principal Analyst", "guide": "The skills that separate Principal Analysts from everyone else: strategic impact, stakeholder influence, and organizational leadership.", "nodes": [{"id": "n49", "ico": "\ud83c\udfd4\ufe0f", "lbl": "Strategic Thinking", "xp": 40, "topics": "Opportunity sizing \u00b7 Bottom-up modeling \u00b7 ICE/RICE prioritization \u00b7 ROI analysis \u00b7 Causal thinking in strategy", "qs": [{"t": "mcq", "tag": "Concept", "q": "A PM asks you to size a new feature opportunity. The most rigorous approach is:", "opts": ["Google the market size and report it", "Build a bottom-up model: estimate addressable users, conversion rate, and revenue per user", "Say you need 6 months of data first", "Create a 50-slide presentation with every possible metric"], "ans": 1, "exp": "Bottom-up: 100M users x 5% conversion x $120/yr = $600M TAM. Show your assumptions. Cross-check with a top-down estimate. This is the analytical thinking that separates strategic PAs from tactical ones."}, {"t": "match", "tag": "Match Pairs", "q": "Match each prioritization framework to its method:", "pairs": [["ICE Score", "Impact x Confidence x Ease \u2014 a simple multiplicative score"], ["RICE Score", "Reach x Impact x Confidence / Effort \u2014 adds scale"], ["MoSCoW", "Must-have, Should-have, Could-have, Won't-have \u2014 categorical"], ["Kano Model", "Classify features by user delight versus baseline expectation"]], "exp": "Senior PAs help PMs prioritize objectively using these frameworks. The key is making the scoring criteria explicit, consistent, and agreed upon in advance \u2014 not adjusting scores after to match intuition."}, {"t": "tf", "tag": "True or False", "q": "A Principal Analyst connects specific analytical findings directly to business strategy recommendations, not just reporting what the data shows.", "ans": true, "exp": "'Our data shows X, which means we should do Y, with expected impact Z.' The analysis is the beginning, not the end. Principal Analysts are judged by the decisions their work influences, not the analyses they produce."}, {"t": "blank", "tag": "Fill in the Blank", "q": "___ sizing estimates the total potential impact of a feature before building it, enabling the team to decide whether the opportunity justifies the investment.", "hint": ["Opportunity", "Market", "Feature", "Revenue"], "ans": "Opportunity", "exp": "Opportunity sizing answers: 'Is this worth building?' A feature affecting 0.1% of users with 0.01% revenue lift probably does not justify 3 months of engineering. Size it first, then decide."}]}, {"id": "n50", "ico": "\ud83e\udd1d", "lbl": "Stakeholder Management", "xp": 40, "topics": "Pre-socializing \u00b7 Handling disagreement \u00b7 Executive communication \u00b7 Influence without authority \u00b7 Data storytelling", "qs": [{"t": "mcq", "tag": "Concept", "q": "A VP disagrees with your analysis findings in a meeting. The best response is:", "opts": ["Immediately agree to avoid conflict", "Stand firm and refuse all changes", "Understand their concern, investigate their alternative hypothesis with data, then follow the evidence", "Send a passive-aggressive follow-up email"], "ans": 2, "exp": "Data disagreements should be resolved with more data, not politics. Acknowledge their perspective, investigate, and follow the data \u2014 even if it proves you wrong. Being right matters more than winning the argument."}, {"t": "tf", "tag": "True or False", "q": "The best time to share important analytical findings is by announcing them without warning in a large all-hands meeting.", "ans": false, "exp": "Always pre-socialize important findings. Brief key stakeholders 1:1 before large meetings. No one likes being surprised by data in front of their team \u2014 it triggers defensiveness rather than curiosity and openness."}, {"t": "blank", "tag": "Fill in the Blank", "q": "Sharing key findings with stakeholders individually BEFORE a large meeting to align on framing and anticipate objections is called ___ socializing the analysis.", "hint": ["pre", "over", "under", "re"], "ans": "pre", "exp": "Pre-socializing is one of the most underrated analyst skills. It builds trust, avoids ambush situations, and gives stakeholders time to process findings rather than reacting defensively in the meeting."}, {"t": "order", "tag": "Put in Order", "q": "Arrange the ideal steps when presenting a controversial finding to senior leadership:", "items": ["Pre-socialize with your direct manager first", "Prepare responses to likely objections with data", "Lead the presentation with business impact, not methodology", "Listen to feedback and offer additional follow-up analysis"], "exp": "This sequence maximizes the chance your findings drive action. Leading with impact respects leadership's time. Anticipating objections demonstrates rigor. Following up demonstrates partnership and accountability."}]}, {"id": "n51", "ico": "\ud83d\udc51", "lbl": "The Principal Analyst", "xp": 50, "topics": "Analytics strategy \u00b7 Mentoring \u00b7 Technical leadership \u00b7 Org design \u00b7 Saying no to low-value work", "qs": [{"t": "mcq", "tag": "Concept", "q": "Which best describes what a Principal Analyst does that a Senior Analyst typically does not?", "opts": ["Writes more complex SQL", "Works on more dashboards simultaneously", "Defines analytics strategy for the product area, influences roadmap priorities, and develops the team's analytical capabilities", "Attends more cross-functional meetings"], "ans": 2, "exp": "Principal Analysts operate at the organizational level: they define what gets measured, influence what gets built, set analytical standards, and develop other analysts. This is leadership, not just individual contribution."}, {"t": "tf", "tag": "True or False", "q": "A Principal Analyst should be empowered to decline analysis requests that would not change any decision, protecting the team's capacity for high-impact work.", "ans": true, "exp": "Saying no is a leadership superpower. 'This analysis won't change our decision, so we should not do it.' Protecting the team's focus on high-leverage work is a core responsibility at the Principal level."}, {"t": "order", "tag": "Put in Order", "q": "Arrange these levels in the typical product analytics career progression:", "items": ["Junior Product Analyst (0-2 years)", "Product Analyst (2-4 years)", "Senior Product Analyst (4-7 years)", "Lead / Principal Analyst (7+ years)"], "exp": "Each level requires more strategic influence, not just technical depth. The JPA writes queries; the PA owns metrics; the Senior PA runs experiments; the Principal shapes what questions get asked at all."}, {"t": "blank", "tag": "Fill in the Blank", "q": "The ultimate goal of the entire Product Analytics function \u2014 SQL, statistics, A/B testing, causal inference, storytelling \u2014 is to help the company make faster, better ___ decisions.", "hint": ["product", "financial", "HR", "marketing"], "ans": "product", "exp": "Never lose sight of the 'so what.' Every method in this curriculum is in service of better product decisions. That is the mission. Rodrigues says it on page 1 and repeats it throughout: actionable insights drive product change."}]}]}]
+</script>
+
+<!-- ════════════════════════════ MAIN SCRIPT ════════════════════════════ -->
+<script>
+// ──────────────────────────────────────────────────────────────────────
+// SAFE DOM HELPER
+// ──────────────────────────────────────────────────────────────────────
+const PROXY = new Proxy({},{get:()=>PROXY,set:()=>true,apply:()=>PROXY});
+PROXY.classList={add:()=>{},remove:()=>{},contains:()=>false,toggle:()=>{}};
+PROXY.style={};PROXY.textContent='';PROXY.innerHTML='';PROXY.value='';
+function $e(id){return document.getElementById(id)||PROXY}
+
+// ──────────────────────────────────────────────────────────────────────
+// DATA
+// ──────────────────────────────────────────────────────────────────────
+const UNITS = JSON.parse(document.getElementById('CUR').textContent);
+
+const RANKS = [
+  {n:'Intern',xp:0,ico:'🎓',col:'#afafaf'},
+  {n:'Junior Analyst',xp:300,ico:'📊',col:'#58CC02'},
+  {n:'Analyst',xp:700,ico:'🔍',col:'#1CB0F6'},
+  {n:'Senior Analyst',xp:1400,ico:'📈',col:'#FF9600'},
+  {n:'Lead Analyst',xp:2400,ico:'🧠',col:'#CE82FF'},
+  {n:'Principal Analyst',xp:3800,ico:'👑',col:'#FFD900'}
+];
+
+const ACHS = [
+  {id:'first',ico:'🎯',n:'First Step',d:'Complete your first lesson',chk:s=>s.doneNodes.size>=1},
+  {id:'streak3',ico:'🔥',n:'On Fire',d:'3-day streak',chk:s=>s.streak>=3},
+  {id:'perfect',ico:'💎',n:'Perfectionist',d:'Complete a lesson with no mistakes',chk:s=>s.lastPerfect},
+  {id:'sql1',ico:'🗄️',n:'SQL Starter',d:'Complete SQL Basics',chk:s=>['n10','n11','n12'].every(id=>s.doneNodes.has(id))},
+  {id:'sql2',ico:'⚡',n:'SQL Master',d:'Complete all SQL units',chk:s=>['n10','n11','n12','n13','n14','n15','n16','n17'].every(id=>s.doneNodes.has(id))},
+  {id:'stats',ico:'📐',n:'Statistician',d:'Complete all Statistics units',chk:s=>['n18','n19','n20','n21','n22','n23','n24'].every(id=>s.doneNodes.has(id))},
+  {id:'half',ico:'🏁',n:'Halfway There',d:'Complete 18+ lessons',chk:s=>s.doneNodes.size>=18},
+  {id:'comeback',ico:'❤️‍🔥',n:'Comeback Kid',d:'Continue after losing a heart',chk:s=>s.lostHeart},
+  {id:'speed',ico:'⚡',n:'Speed Runner',d:'Complete a lesson in under 90 seconds',chk:s=>s.lastSpeed},
+  {id:'senior',ico:'📈',n:'Senior Analyst',d:'Reach 1400 XP',chk:s=>s.xp>=1400},
+  {id:'principal',ico:'👑',n:'Principal Analyst',d:'Reach 3800 XP',chk:s=>s.xp>=3800}
+];
+
+const LB_PLAYERS = [
+  {n:'Arjun Sharma',xp:2840,ava:'A'},{n:'Priya Mehta',xp:2610,ava:'P'},
+  {n:'Rohan Gupta',xp:2380,ava:'R'},{n:'Sneha Iyer',xp:2150,ava:'S'},
+  {n:'Vikram Nair',xp:1920,ava:'V'},{n:'Ananya Das',xp:1700,ava:'A'},
+  {n:'Karthik Rao',xp:1480,ava:'K'},{n:'Divya Pillai',xp:1260,ava:'D'},
+  {n:'Aditya Kumar',xp:1040,ava:'A'},{n:'Neha Joshi',xp:820,ava:'N'},
+  {n:'Rahul Verma',xp:600,ava:'R'},{n:'Kavya Singh',xp:430,ava:'K'},
+  {n:'Siddharth M',xp:310,ava:'S'},{n:'Pooja Reddy',xp:180,ava:'P'}
+];
+
+// ──────────────────────────────────────────────────────────────────────
+// STATE
+// ──────────────────────────────────────────────────────────────────────
+let S = {
+  name:'Learner', xp:0, streak:0, hearts:5, lastDate:'',
+  doneNodes:new Set(), unlockedAch:new Set(),
+  activeDates:new Set(),
+  lostHeart:false, lastPerfect:false, lastSpeed:false
+};
+
+// Lesson state
+let LS = {
+  active: false,
+  unit:null, node:null, queue:[], pos:0,
+  mastered:new Set(), attempts:{},
+  wrongs:0, corrects:0, startTime:0, isPractice:false,
+  curSel:null, matchSel:null, matchDone:new Set(),
+  arranged:[], blankUsed:[]
+};
+
+// ──────────────────────────────────────────────────────────────────────
+// UTILS
+// ──────────────────────────────────────────────────────────────────────
+function show(id){
+  document.querySelectorAll('.sc').forEach(s=>{s.classList.remove('on')});
+  const el = document.getElementById(id);
+  if(el) el.classList.add('on');
+}
+function saveS(){
+  let lsData = null;
+  if(LS.active && LS.node && LS.unit) {
+    lsData = {
+      ui: UNITS.indexOf(LS.unit),
+      nodeId: LS.node.id,
+      queue: LS.queue, pos: LS.pos,
+      mastered: [...LS.mastered], attempts: LS.attempts,
+      wrongs: LS.wrongs, corrects: LS.corrects, 
+      startTime: LS.startTime, isPractice: LS.isPractice,
+      matchDone: [...LS.matchDone], arranged: LS.arranged,
+      curSel: LS.curSel, blankUsed: LS.blankUsed, matchSel: LS.matchSel
+    };
+  }
+  try{localStorage.setItem('aq8',JSON.stringify({...S,doneNodes:[...S.doneNodes],unlockedAch:[...S.unlockedAch],activeDates:[...S.activeDates],lsData}))}catch(e){}
+}
+function loadS(){
+  try{
+    const raw=localStorage.getItem('aq8');
+    if(!raw)return;
+    const d=JSON.parse(raw);
+    d.doneNodes=new Set(d.doneNodes||[]);
+    d.unlockedAch=new Set(d.unlockedAch||[]);
+    d.activeDates=new Set(d.activeDates||[]);
+    if(d.lsData) S._lsData = d.lsData;
+    delete d.lsData;
+    Object.assign(S,d);
+  }catch(e){}
+}
+function allNodes(){
+  return UNITS.flatMap(u=>u.nodes);
+}
+function getNode(id){
+  return allNodes().find(n=>n.id===id);
+}
+function isUnlocked(nodeIdx,unitIdx){
+  if(unitIdx===0&&nodeIdx===0)return true;
+  if(nodeIdx>0){
+    const prev=UNITS[unitIdx].nodes[nodeIdx-1];
+    return S.doneNodes.has(prev.id);
+  }
+  // first node of unit — need last node of prev unit done
+  if(unitIdx>0){
+    const prevUnit=UNITS[unitIdx-1];
+    const last=prevUnit.nodes[prevUnit.nodes.length-1];
+    return S.doneNodes.has(last.id);
+  }
+  return false;
+}
+function toast(m){
+  const t=$e('toast');t.textContent=m;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2300);
+}
+
+// ──────────────────────────────────────────────────────────────────────
+// SPLASH
+// ──────────────────────────────────────────────────────────────────────
+function startGame(){
+  const nm=($e('sp-name').value||'').trim()||'Learner';
+  loadS();
+  S.name=nm;
+  checkStreak();
+  saveS();
+  show('s-main');
+  switchTab(0);
+}
+
+function tryAutoResume(){
+  try{
+    const raw=localStorage.getItem('aq8');
+    if(!raw)return false;
+    const d=JSON.parse(raw);
+    if(!d||!d.name||d.name==='Learner'&&!d.xp)return false;
+    loadS();
+    checkStreak();
+    saveS();
+    if(S._lsData){
+      resumeLesson(S._lsData);
+      delete S._lsData;
+    } else {
+      show('s-main');
+      switchTab(0);
+    }
+    return true;
+  }catch(e){return false;}
+}
+
+function resumeLesson(d){
+  LS.unit = UNITS[d.ui];
+  LS.node = getNode(d.nodeId);
+  if (!LS.node) { show('s-main'); switchTab(0); return; }
+  LS.active = true;
+  LS.queue = d.queue; LS.pos = d.pos;
+  LS.mastered = new Set(d.mastered);
+  LS.attempts = d.attempts;
+  LS.wrongs = d.wrongs; LS.corrects = d.corrects;
+  LS.startTime = d.startTime; LS.isPractice = d.isPractice;
+  show('s-lesson');
+  updateLessonUI();
+  LS.curSel=null; LS.matchSel=null; LS.matchDone=new Set(); LS.arranged=[]; LS.blankUsed=[];
+  renderQ();
+}
+
+function prefillSplash(){
+  try{
+    const raw=localStorage.getItem('aq8');
+    if(!raw)return;
+    const d=JSON.parse(raw);
+    if(d&&d.name&&d.name!=='Learner')$e('sp-name').value=d.name;
+  }catch(e){}
+}
+function checkStreak(){
+  const today=new Date().toDateString();
+  if(S.lastDate===today){S.activeDates.add(today);return;}
+  const yesterday=new Date(Date.now()-86400000).toDateString();
+  S.streak=S.lastDate===yesterday?S.streak+1:1;
+  S.lastDate=today;
+  S.activeDates.add(today);
+}
+
+// ──────────────────────────────────────────────────────────────────────
+// TABS
+// ──────────────────────────────────────────────────────────────────────
+const TAB_IDS=['tab-learn','tab-practice','tab-lb','tab-ach','tab-prof'];
+function switchTab(i){
+  TAB_IDS.forEach((id,j)=>{
+    const el=document.getElementById(id);
+    if(el)el.style.display=(j===i)?'block':'none';
+  });
+  document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('active',j===i));
+  updateTopbar();
+  if(i===0)renderLearn();
+  if(i===1)renderPractice();
+  if(i===2)renderLB();
+  if(i===3)renderAch();
+  if(i===4)renderProfile();
+}
+function updateTopbar(){
+  $e('tb-streak').textContent=S.streak;
+  $e('tb-xp').textContent=S.xp;
+  $e('tb-hearts').textContent=S.hearts;
+  updateXPBar();
+}
+function updateXPBar(){
+  const cur=RANKS.slice().reverse().find(r=>S.xp>=r.xp)||RANKS[0];
+  const nxt=RANKS[RANKS.indexOf(cur)+1];
+  $e('xp-rank-lbl').textContent=cur.n;
+  if(nxt){
+    const pct=Math.min(100,Math.round((S.xp-cur.xp)/(nxt.xp-cur.xp)*100));
+    $e('xp-bar').style.width=pct+'%';
+    $e('xp-next-lbl').textContent=(nxt.xp-S.xp)+' XP to '+nxt.n;
+  }else{
+    $e('xp-bar').style.width='100%';
+    $e('xp-next-lbl').textContent='Max Rank!';
+  }
+}
+
+// ──────────────────────────────────────────────────────────────────────
+// LEARN TAB
+// ──────────────────────────────────────────────────────────────────────
+const QT_PILLS={mcq:{lbl:'Multiple Choice',bg:'#DDF4FF',col:'#006eb3'},tf:{lbl:'True / False',bg:'#D7FFB8',col:'#2e7d00'},blank:{lbl:'Fill in Blank',bg:'#FFF0D9',col:'#a05800'},match:{lbl:'Match Pairs',bg:'#F5E8FF',col:'#7700bb'},order:{lbl:'Arrange',bg:'#FFE0E0',col:'#c00000'}};
+
+function renderLearn(){
+  const cont=document.getElementById('tab-learn');
+  if(!cont)return;
+  let secs={};
+  UNITS.forEach((u,ui)=>{
+    if(!secs[u.sec])secs[u.sec]={cls:u.cls,units:[]};
+    secs[u.sec].units.push({u,ui});
+  });
+  let html='';
+  let nodeGlobalIdx=0;
+  let milestoneNext=false;
+
+  Object.entries(secs).forEach(([secName,{cls,units}])=>{
+    const clsMap={'uh-g':'uh-g','uh-b':'uh-b','uh-o':'uh-o','uh-p':'uh-p'};
+    const btnCol={'uh-g':'var(--g)','uh-b':'var(--b)','uh-o':'var(--o)','uh-p':'var(--p)'};
+    const nodeCol={'uh-g':'node-g','uh-b':'node-b','uh-o':'node-o','uh-p':'node-p'};
+    
+    units.forEach(({u,ui},localUi)=>{
+      // Section header on first unit of section
+      if(localUi===0){
+        html+=`<div class="section-hdr ${cls}" style="border-bottom:2px solid;">
+          <div class="sec-badge ${cls}" style="font-size:20px;">${ui===0?'🚀':ui===2?'📋':ui===3?'🗄️':ui===5?'📐':ui===6?'🧪':ui===7?'🔍':ui===9?'🏴‍☠️':ui===10?'📖':ui===11?'👑':'📊'}</div>
+          <div class="sec-info"><div class="sec-lbl">${secName}</div><div class="sec-name">${u.name}</div></div>
+          <button class="guide-btn ${cls}" style="border-color:${btnCol[cls]};color:${btnCol[cls]};" onclick="openGuide(${ui})">GUIDE</button>
+        </div>`;
+      } else {
+        html+=`<div style="padding:10px 18px 4px;display:flex;align-items:center;justify-content:space-between;">
+          <div style="font-size:14px;font-weight:900;color:#3C3C3C;">${u.name}</div>
+          <button class="guide-btn ${cls}" style="border-color:${btnCol[cls]};color:${btnCol[cls]};" onclick="openGuide(${ui})">GUIDE</button>
+        </div>`;
+      }
+
+      html+='<div class="path">';
+      const positions=['center','right','right','center','left','left'];
+      u.nodes.forEach((node,ni)=>{
+        const unlocked=isUnlocked(ni,ui);
+        const done=S.doneNodes.has(node.id);
+        const posClass=positions[(nodeGlobalIdx)%6];
+        let btnClass=done?'node-done':(unlocked?nodeCol[cls]:'node-lock');
+        let inner=done?`<div class="nb-ico">${node.ico}</div><div class="nb-chk"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>`
+          :`<div class="nb-ico" style="${!unlocked?'filter:grayscale(1) opacity(.4)':''}">  ${node.ico}</div>${!unlocked?'<div class="nb-lock"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.8)" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>':''}`;
+        const clickFn=unlocked?`openNodeModal('${node.id}',${ui})`:'';
+        html+=`<div class="node-row ${posClass}">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:0">
+            <button class="node-btn ${btnClass}" ${clickFn?`onclick="${clickFn}"`:''}>${inner}</button>
+            <div class="nb-lbl">${node.lbl}</div>
+          </div>
+        </div>`;
+        nodeGlobalIdx++;
+      });
+      html+='</div>';
+
+      // Milestone after last node of unit
+      if(localUi===units.length-1 && ui<UNITS.length-1){
+        const ms=['🏰','💎','⭐','🔱','🏆','✨'][Math.floor(ui/2)%6];
+        const msLbls=['Unit Complete!','Checkpoint','Milestone','Level Up!','Achievement!','Section Done!'];
+        html+=`<div class="milestone"><div class="ms-ico">${ms}</div><div class="ms-lbl">${msLbls[Math.floor(ui/2)%6]}</div></div>`;
+      }
+    });
+  });
+
+  cont.innerHTML=html;
+}
+
+// ──────────────────────────────────────────────────────────────────────
+// GUIDE SHEET
+// ──────────────────────────────────────────────────────────────────────
+function openGuide(ui){
+  const u=UNITS[ui];
+  const qts=[...new Set(u.nodes.flatMap(n=>n.qs.map(q=>q.t)))];
+  let html=`<div class="bs-ttl">${u.name}</div><div class="bs-desc">${u.guide}</div>`;
+  u.nodes.forEach(n=>{
+    const nqts=[...new Set(n.qs.map(q=>q.t))];
+    const pillsHtml=nqts.map(t=>{
+      const p=QT_PILLS[t]||{lbl:t,bg:'#eee',col:'#333'};
+      return `<span class="qt-pill" style="background:${p.bg};color:${p.col};">${p.lbl}</span>`;
+    }).join('');
+    html+=`<div class="bs-node">
+      <div class="bs-n-ico">${n.ico}</div>
+      <div class="bs-n-info">
+        <div class="bs-n-name">${n.lbl}</div>
+        <div class="bs-n-topics">${n.topics}</div>
+        <div class="bs-n-pills">${pillsHtml}</div>
+      </div>
+    </div>`;
+  });
+  document.getElementById('guide-content').innerHTML=html;
+  const sheet=document.getElementById('guide-sheet');
+  sheet.style.display='flex';
+  requestAnimationFrame(()=>sheet.classList.add('open'));
+}
+function closeGuide(){
+  const sheet=document.getElementById('guide-sheet');
+  sheet.classList.remove('open');
+  setTimeout(()=>{sheet.style.display='none'},300);
+}
+
+// ──────────────────────────────────────────────────────────────────────
+// NODE MODAL
+// ──────────────────────────────────────────────────────────────────────
+function openNodeModal(nodeId,ui){
+  const node=getNode(nodeId);
+  if(!node)return;
+  LS.node=node; LS.unit=UNITS[ui]; LS.isPractice=false;
+  $e('nm-ico').textContent=node.ico;
+  $e('nm-ttl').textContent=node.lbl;
+  $e('nm-topics').textContent=node.topics;
+  $e('nm-xp').textContent='+'+node.xp+' XP';
+  const qts=[...new Set(node.qs.map(q=>q.t))];
+  $e('nm-pills').innerHTML=qts.map(t=>{
+    const p=QT_PILLS[t]||{lbl:t,bg:'#eee',col:'#333'};
+    return `<span class="qt-pill" style="background:${p.bg};color:${p.col};">${p.lbl}</span>`;
+  }).join('');
+  const done=S.doneNodes.has(nodeId);
+  $e('nm-start').textContent=done?'PRACTICE AGAIN':'START LESSON';
+  show('s-nmodal');
+}
+function closeNModal(e){
+  if(e.target.id==='s-nmodal')show('s-main');
+}
+
+// ──────────────────────────────────────────────────────────────────────
+// LESSON
+// ──────────────────────────────────────────────────────────────────────
+function startLesson(){
+  if(!LS.node)return;
+  show('s-lesson');
+  LS.queue=[...LS.node.qs.map((_,i)=>i)];
+  LS.pos=0; LS.mastered=new Set(); LS.attempts={};
+  LS.wrongs=0; LS.corrects=0; LS.startTime=Date.now();
+  LS.curSel=null; LS.matchSel=null; LS.matchDone=new Set();
+  LS.arranged=[]; LS.blankUsed=[];
+  LS.active=true;
+  saveS();
+  updateLessonUI();
+  renderQ();
+}
+function updateLessonUI(){
+  const prog=LS.node?Math.round(LS.mastered.size/LS.node.qs.length*100):0;
+  $e('les-prog').style.width=prog+'%';
+  $e('les-hearts-val').textContent=S.hearts;
+}
+function renderQ(){
+  if(LS.mastered.size>=LS.node.qs.length){endLesson();return;}
+  const qi=LS.queue[LS.pos];
+  const q=LS.node.qs[qi];
+  LS.curSel=null; LS.matchSel=null; LS.matchDone=new Set();
+  LS.arranged=[]; LS.blankUsed=[];
+
+  const foot=$e('les-foot');
+  foot.className='les-foot';
+  $e('fb-row').style.display='none';
+  $e('fb-check').className='foot-btn fb-check dis';
+  $e('fb-check').textContent='CHECK';
+  $e('fb-skip').style.display='flex';
+
+  let html=`<div class="q-type-tag">${q.tag||q.t}</div><div class="q-text">${q.q}</div>`;
+
+  if(q.t==='mcq'){
+    html+=`<div class="opts">`;
+    q.opts.forEach((opt,i)=>{
+      html+=`<button class="opt" onclick="selMCQ(${i})" id="opt-${i}"><span class="opt-key">${String.fromCharCode(65+i)}</span>${opt}</button>`;
+    });
+    html+=`</div>`;
+  } else if(q.t==='tf'){
+    html+=`<div class="tf-opts">
+      <button class="tf-opt" onclick="selTF(true)" id="tf-true"><span class="tf-ico">✅</span>TRUE</button>
+      <button class="tf-opt" onclick="selTF(false)" id="tf-false"><span class="tf-ico">❌</span>FALSE</button>
+    </div>`;
+  } else if(q.t==='blank'){
+    html+=`<div style="font-size:20px;font-weight:800;line-height:2;margin-bottom:16px;">
+      <span class="blank-wrap"><input class="blank-input" id="blank-inp" placeholder="..." oninput="onBlankInput()" autocomplete="off" autocorrect="off" spellcheck="false"></span>
+    </div>`;
+    html+=`<div class="hint-chips" id="hint-chips">`;
+    (q.hint||[]).forEach((h,i)=>`<button class="h-chip" id="hc-${i}" onclick="useHint('${h}',${i})">${h}</button>`).forEach(s=>html+=s);
+    html+=`</div>`;
+  } else if(q.t==='match'){
+    const lefts=q.pairs.map(p=>p[0]);
+    const rights=[...q.pairs.map(p=>p[1])].sort(()=>Math.random()-.5);
+    LS._matchLefts=lefts; LS._matchRights=rights;
+    LS._matchMap={};
+    html+=`<div class="match-grid">`;
+    lefts.forEach((l,i)=>html+=`<div class="m-item" id="ml-${i}" onclick="selMatch('L',${i})">${l}</div>`);
+    rights.forEach((r,i)=>html+=`<div class="m-item" id="mr-${i}" onclick="selMatch('R',${i})">${r}</div>`);
+    html+=`</div>`;
+  } else if(q.t==='order'){
+    const shuffled=[...q.items].sort(()=>Math.random()-.5);
+    LS._orderItems=shuffled;
+    html+=`<div class="arr-target" id="arr-target"></div>`;
+    html+=`<div class="arr-bank" id="arr-bank">`;
+    shuffled.forEach((item,i)=>html+=`<button class="arr-chip" id="ac-${i}" onclick="tapArrange(${i})">${item}</button>`);
+    html+=`</div>`;
+  }
+
+  $e('les-body').innerHTML=html;
+  updateLessonUI();
+}
+// MCQ
+function selMCQ(i){
+  document.querySelectorAll('.opt').forEach((o,j)=>{
+    o.classList.toggle('sel',j===i);
+  });
+  LS.curSel=i;
+  activateCheck();
+}
+// TF
+function selTF(val){
+  LS.curSel=val;
+  $e('tf-true').classList.toggle('sel',val===true);
+  $e('tf-false').classList.toggle('sel',val===false);
+  activateCheck();
+}
+// BLANK
+function onBlankInput(){
+  LS.curSel=$e('blank-inp').value.trim();
+  activateCheck(LS.curSel.length>0);
+}
+function useHint(val,idx){
+  $e('blank-inp').value=val;
+  LS.curSel=val;
+  document.querySelectorAll('.h-chip').forEach((c,i)=>c.classList.toggle('used',i===idx));
+  activateCheck();
+}
+// MATCH
+function selMatch(side,idx){
+  const qi=LS.queue[LS.pos];
+  const q=LS.node.qs[qi];
+  const id=side+idx;
+  if(LS.matchDone.has(id))return;
+
+  if(LS.matchSel===null){
+    LS.matchSel={side,idx};
+    if(side==='L')$e('ml-'+idx).classList.add('sel');
+    else $e('mr-'+idx).classList.add('sel');
+  } else {
+    if(LS.matchSel.side===side){
+      // same side — deselect old, select new
+      if(side==='L')$e('ml-'+LS.matchSel.idx).classList.remove('sel');
+      else $e('mr-'+LS.matchSel.idx).classList.remove('sel');
+      LS.matchSel={side,idx};
+      if(side==='L')$e('ml-'+idx).classList.add('sel');
+      else $e('mr-'+idx).classList.add('sel');
+      return;
+    }
+    // Different sides — check match
+    const lIdx=side==='R'?LS.matchSel.idx:idx;
+    const rIdx=side==='R'?idx:LS.matchSel.idx;
+    const leftVal=LS._matchLefts[lIdx];
+    const rightVal=LS._matchRights[rIdx];
+    const correct=q.pairs.some(p=>p[0]===leftVal&&p[1]===rightVal);
+    if(correct){
+      $e('ml-'+lIdx).classList.remove('sel');$e('ml-'+lIdx).classList.add('matched');
+      $e('mr-'+rIdx).classList.remove('sel');$e('mr-'+rIdx).classList.add('matched');
+      LS.matchDone.add('L'+lIdx);LS.matchDone.add('R'+rIdx);
+      LS.matchSel=null;
+      if(LS.matchDone.size===q.pairs.length*2){LS.curSel='done';activateCheck();}
+    } else {
+      $e('ml-'+lIdx).classList.add('wrong-match');$e('mr-'+rIdx).classList.add('wrong-match');
+      setTimeout(()=>{
+        $e('ml-'+lIdx).classList.remove('wrong-match','sel');
+        $e('mr-'+rIdx).classList.remove('wrong-match','sel');
+      },600);
+      LS.matchSel=null;
+    }
+  }
+}
+// ARRANGE
+function tapArrange(idx){
+  const chip=$e('ac-'+idx);
+  if(LS.arranged.includes(idx)){
+    LS.arranged=LS.arranged.filter(i=>i!==idx);
+    chip.classList.remove('in-target');
+  } else {
+    LS.arranged.push(idx);
+    chip.classList.add('in-target');
+  }
+  const target=$e('arr-target');
+  target.innerHTML=LS.arranged.map(i=>`<span class="arr-chip placed">${LS._orderItems[i]}</span>`).join('');
+  target.classList.toggle('has',LS.arranged.length>0);
+  const qi=LS.queue[LS.pos];
+  const q=LS.node.qs[qi];
+  activateCheck(LS.arranged.length===q.items.length);
+}
+
+function activateCheck(force){
+  const btn=$e('fb-check');
+  const active=(force!==undefined)?force:(LS.curSel!==null&&LS.curSel!==undefined&&LS.curSel!=='');
+  btn.className='foot-btn fb-check'+(active?'':' dis');
+}
+
+// ──────────────────────────────────────────────────────────────────────
+// CHECK / SKIP
+// ──────────────────────────────────────────────────────────────────────
+function checkAnswer(){
+  const btn=$e('fb-check');
+  if(btn.classList.contains('dis'))return;
+
+  const qi=LS.queue[LS.pos];
+  const q=LS.node.qs[qi];
+  let correct=false;
+
+  if(q.t==='mcq') correct=LS.curSel===q.ans;
+  else if(q.t==='tf') correct=LS.curSel===q.ans;
+  else if(q.t==='blank') correct=LS.curSel.toLowerCase().trim()===String(q.ans).toLowerCase().trim();
+  else if(q.t==='match') correct=LS.matchDone.size===q.pairs.length*2;
+  else if(q.t==='order'){
+    const arranged=LS.arranged.map(i=>LS._orderItems[i]);
+    correct=JSON.stringify(arranged)===JSON.stringify(q.items);
+  }
+
+  // Lock interactions
+  document.querySelectorAll('.opt,.tf-opt,.h-chip,.arr-chip,.m-item').forEach(el=>el.style.pointerEvents='none');
+
+  if(correct){
+    LS.corrects++;
+    LS.mastered.add(qi);
+    showFeedback(true,q.exp);
+    if(q.t==='mcq'){$e('opt-'+q.ans).classList.add('correct')}
+    if(q.t==='tf'){$e('tf-'+(q.ans?'true':'false')).classList.add('correct')}
+    if(q.t==='order'){
+      LS.arranged.forEach((i,pos)=>{
+        const chip=document.querySelectorAll('.arr-target .placed')[pos];
+        if(chip)chip.className='arr-chip correct-pos';
+      });
+    }
+  } else {
+    LS.wrongs++;
+    S.lostHeart=true;
+    if(!LS.isPractice){
+      S.hearts=Math.max(0,S.hearts-1);
+      $e('les-hearts-val').textContent=S.hearts;
+    }
+    showFeedback(false,q.exp+(q.t==='mcq'?'\n✓ '+q.opts[q.ans]:'')+(q.t==='blank'?'\n✓ '+q.ans:''));
+    if(q.t==='mcq'){$e('opt-'+LS.curSel).classList.add('wrong');$e('opt-'+q.ans).classList.add('correct')}
+    if(q.t==='tf'){
+      const wrongId='tf-'+(LS.curSel?'true':'false');
+      const rightId='tf-'+(q.ans?'true':'false');
+      $e(wrongId).classList.add('wrong');$e(rightId).classList.add('correct');
+    }
+    if(q.t==='order'){
+      LS.arranged.forEach((i,pos)=>{
+        const chip=document.querySelectorAll('.arr-target .placed')[pos];
+        if(chip)chip.className='arr-chip wrong-pos';
+      });
+    }
+    // Re-queue
+    LS.attempts[qi]=(LS.attempts[qi]||0)+1;
+    if((LS.attempts[qi]||0)<3){
+      LS.queue.splice(Math.min(LS.pos+2,LS.queue.length),0,qi);
+    }
+  }
+  saveS();
+}
+
+function showFeedback(correct,exp){
+  const foot=$e('les-foot');
+  foot.className='les-foot '+(correct?'correct-bg':'wrong-bg');
+  $e('fb-row').style.display='flex';
+  $e('fb-ico').textContent=correct?'✅':'❌';
+  $e('fb-lbl').textContent=correct?'Correct!':'Oops!';
+  $e('fb-exp').textContent=exp||'';
+  const btn=$e('fb-check');
+  btn.className='foot-btn fb-check'+(correct?'':' red');
+  btn.textContent='CONTINUE';
+  btn.onclick=nextQ;
+  $e('fb-skip').style.display='none';
+}
+
+function nextQ(){
+  if(S.hearts<=0&&!LS.isPractice){show('s-fail');return;}
+  $e('fb-check').onclick=checkAnswer;
+  LS.pos++;
+  saveS();
+  if(LS.pos>=LS.queue.length||LS.mastered.size>=LS.node.qs.length){
+    endLesson();
+  } else {
+    renderQ();
+  }
+}
+
+function skipQ(){
+  LS.pos++;
+  saveS();
+  if(LS.pos>=LS.queue.length){endLesson();}
+  else renderQ();
+}
+
+function closeLesson(){
+  LS.active=false;
+  saveS();
+  show('s-main');
+  renderLearn();
+}
+
+// ──────────────────────────────────────────────────────────────────────
+// END LESSON
+// ──────────────────────────────────────────────────────────────────────
+function endLesson(){
+  LS.active=false;
+  const node=LS.node;
+  const elapsed=(Date.now()-LS.startTime)/1000;
+  const total=LS.corrects+LS.wrongs;
+  const acc=total>0?Math.round(LS.corrects/total*100):100;
+  const perfect=LS.wrongs===0;
+  const fast=elapsed<90&&LS.corrects>0;
+
+  // Award XP
+  let xpGain=node.xp;
+  if(perfect)xpGain=Math.round(xpGain*1.5);
+  if(LS.isPractice)xpGain=Math.max(5,Math.round(xpGain*.3));
+
+  const prevRankIdx=RANKS.slice().reverse().findIndex(r=>S.xp>=r.xp);
+  S.xp+=xpGain;
+  const newRankIdx=RANKS.slice().reverse().findIndex(r=>S.xp>=r.xp);
+  updateTopbar();
+  showXPPop(xpGain, document.getElementById('tb-xp'));
+
+  S.doneNodes.add(node.id);
+  S.lastPerfect=perfect;
+  S.lastSpeed=fast;
+  S.activeDates.add(new Date().toDateString());
+  // Update streak if not yet counted today
+  checkStreak();
+  if(LS.isPractice&&perfect)S.hearts=Math.min(5,S.hearts+1);
+
+  checkAchs();
+  saveS();
+
+  $e('done-ttl').textContent=LS.isPractice?'Practice Done!':'Lesson Complete!';
+  $e('done-sub').textContent=perfect?'Perfect score! 🎉':('Keep it up! '+acc+'% accuracy');
+  $e('done-xp').textContent='+'+xpGain;
+  $e('done-acc').textContent=acc+'%';
+  $e('done-qs').textContent=LS.node.qs.length;
+
+  if(prevRankIdx!==newRankIdx&&newRankIdx>prevRankIdx){
+    const rank=RANKS.slice().reverse()[newRankIdx];
+    $e('ru-ring').textContent=rank.ico;
+    $e('ru-ds').textContent=rank.n;
+    setTimeout(()=>show('s-rankup'),600);
+    confetti();confetti();
+  } else {
+    show('s-done');
+    if(perfect)confetti();
+  }
+}
+
+function finishLesson(){
+  show('s-main');
+  switchTab(0);
+}
+
+// ──────────────────────────────────────────────────────────────────────
+// PRACTICE TAB
+// ──────────────────────────────────────────────────────────────────────
+function renderPractice(){
+  const cont=document.getElementById('tab-practice');
+  if(!cont)return;
+  const done=[...S.doneNodes];
+  if(done.length===0){
+    cont.innerHTML=`<div style="padding:40px 24px;text-align:center;color:var(--tl)"><div style="font-size:48px;margin-bottom:12px">🎯</div><div style="font-size:17px;font-weight:800;margin-bottom:8px">Nothing to practice yet</div><div style="font-size:14px;font-weight:600">Complete a lesson first, then come back to review!</div></div>`;
+    return;
+  }
+  let secMap={};
+  UNITS.forEach((u,ui)=>{
+    u.nodes.forEach(n=>{
+      if(S.doneNodes.has(n.id)){
+        if(!secMap[u.sec])secMap[u.sec]={name:u.sec,nodes:[]};
+        secMap[u.sec].nodes.push({n,u,ui});
+      }
+    });
+  });
+  let html=`<div style="padding:12px 16px 4px;font-size:20px;font-weight:900;">Practice</div>`;
+  html+=`<div style="padding:4px 16px 12px;font-size:13px;color:var(--tm);font-weight:600;">Replay completed lessons for free. Earn +1 ❤️ on perfect practice!</div>`;
+  Object.entries(secMap).forEach(([sec,{nodes}])=>{
+    html+=`<div class="prac-sec"><div class="prac-sec-title">${sec}</div>`;
+    nodes.forEach(({n,u,ui})=>{
+      html+=`<div class="prac-card" onclick="practicePractice('${n.id}',${ui})">
+        <div class="pc-ico">${n.ico}</div>
+        <div class="pc-info"><div class="pc-name">${n.lbl}</div><div class="pc-sub">${n.qs.length} questions · +1 ❤️ if perfect</div></div>
+        <div class="pc-badge">PRACTICE</div>
+      </div>`;
+    });
+    html+=`</div>`;
+  });
+  cont.innerHTML=`<div class="prac-grid">${html}</div>`;
+}
+
+function practicePractice(nodeId,ui){
+  const node=getNode(nodeId);
+  if(!node)return;
+  LS.node=node; LS.unit=UNITS[ui]; LS.isPractice=true;
+  startLesson();
+}
+
+// ──────────────────────────────────────────────────────────────────────
+// LEADERBOARD
+// ──────────────────────────────────────────────────────────────────────
+function renderLB(){
+  const cont=document.getElementById('tab-lb');
+  if(!cont)return;
+  const me={n:S.name,xp:S.xp,ava:S.name.charAt(0).toUpperCase(),isMe:true};
+  const all=[...LB_PLAYERS,me].sort((a,b)=>b.xp-a.xp);
+  const myRank=all.findIndex(p=>p.isMe)+1;
+  let html=`<div class="lb-head"><div class="lb-ttl">Leaderboard</div><div class="lb-my">Your rank: #${myRank}</div></div>`;
+  all.forEach((p,i)=>{
+    const rank=i+1;
+    let rankHtml;
+    if(rank===1)rankHtml=`<svg class="lb-medal" viewBox="0 0 24 24" fill="#FFD900"><circle cx="12" cy="12" r="10"/><text x="12" y="17" font-size="11" text-anchor="middle" fill="#7a5900" font-weight="900">1</text></svg>`;
+    else if(rank===2)rankHtml=`<svg class="lb-medal" viewBox="0 0 24 24" fill="#C0C0C0"><circle cx="12" cy="12" r="10"/><text x="12" y="17" font-size="11" text-anchor="middle" fill="#555" font-weight="900">2</text></svg>`;
+    else if(rank===3)rankHtml=`<svg class="lb-medal" viewBox="0 0 24 24" fill="#CD7F32"><circle cx="12" cy="12" r="10"/><text x="12" y="17" font-size="11" text-anchor="middle" fill="#5a2e00" font-weight="900">3</text></svg>`;
+    else rankHtml=`<div class="lb-rank">${rank}</div>`;
+    html+=`<div class="lb-row ${p.isMe?'me':''}">
+      ${rankHtml}
+      <div class="lb-ava" style="${p.isMe?'background:var(--b)':''}">${p.ava}</div>
+      <div class="lb-info"><div class="lb-name">${p.n}${p.isMe?' (You)':''}</div><div class="lb-xp">${p.xp} XP</div></div>
+      <div class="lb-xpv">${p.xp}</div>
+    </div>`;
+  });
+  cont.innerHTML=html;
+}
+
+// ──────────────────────────────────────────────────────────────────────
+// ACHIEVEMENTS
+// ──────────────────────────────────────────────────────────────────────
+function renderAch(){
+  const cont=document.getElementById('tab-ach');
+  if(!cont)return;
+  let html=`<div class="ach-hdr">Achievements</div><div class="ach-grid">`;
+  ACHS.forEach(a=>{
+    const earned=S.unlockedAch.has(a.id);
+    html+=`<div class="ach-card ${earned?'earned':''}">
+      <div class="ac-ico" style="${!earned?'filter:grayscale(1) opacity(.4)':''}">${a.ico}</div>
+      <div class="ac-name">${a.n}</div>
+      <div class="ac-desc">${a.d}</div>
+      ${earned?'<div class="ac-badge">EARNED</div>':'<div class="ac-lock">🔒 Locked</div>'}
+    </div>`;
+  });
+  html+=`</div>`;
+  cont.innerHTML=html;
+}
+function checkAchs(){
+  ACHS.forEach(a=>{
+    if(!S.unlockedAch.has(a.id)&&a.chk(S)){
+      S.unlockedAch.add(a.id);
+      $e('at-ico').textContent=a.ico;
+      $e('at-t').textContent=a.n;
+      $e('at-s').textContent=a.d;
+      const t=$e('ach-t');t.classList.add('show');
+      setTimeout(()=>t.classList.remove('show'),3200);
+    }
+  });
+}
+
+// ──────────────────────────────────────────────────────────────────────
+// PROFILE
+// ──────────────────────────────────────────────────────────────────────
+function renderProfile(){
+  const cont=document.getElementById('tab-prof');
+  if(!cont)return;
+  const cur=RANKS.slice().reverse().find(r=>S.xp>=r.xp)||RANKS[0];
+  const nxt=RANKS[RANKS.indexOf(cur)+1];
+  const totalNodes=allNodes().length;
+  const pct=nxt?Math.min(100,Math.round((S.xp-cur.xp)/(nxt.xp-cur.xp)*100)):100;
+
+  // 28-day activity calendar
+  const cal=Array.from({length:28},(_,i)=>{
+    const d=new Date();
+    d.setHours(0,0,0,0);
+    d.setDate(d.getDate()-(27-i));
+    const isToday=i===27;
+    const active=S.activeDates.has(d.toDateString());
+    return `<div class="cal-cell ${isToday?'today':active?'active':''}"></div>`;
+  }).join('');
+
+  // Rank ladder
+  const ladderHtml=RANKS.map((r,i)=>{
+    const done=S.xp>=r.xp;
+    const isCur=RANKS.indexOf(cur)===i;
+    return `<div class="rl-row">
+      <div class="rl-dot ${done?'done':''} ${isCur?'cur':''}"></div>
+      <div class="rl-name" style="${isCur?'font-weight:900;color:var(--b)':''}">${r.ico} ${r.n}</div>
+      <div class="rl-xp">${r.xp} XP</div>
+    </div>`;
+  }).join('');
+
+  cont.innerHTML=`
+    <div class="prof-head">
+      <div class="ph-ava">
+        <svg viewBox="0 0 200 200" width="68" height="68"><ellipse cx="100" cy="115" rx="58" ry="62" fill="#58CC02"/><ellipse cx="100" cy="126" rx="40" ry="44" fill="#89E219"/><circle cx="80" cy="95" r="19" fill="#fff"/><circle cx="120" cy="95" r="19" fill="#fff"/><circle cx="80" cy="95" r="12" fill="#1A1A1A"/><circle cx="120" cy="95" r="12" fill="#1A1A1A"/><circle cx="85" cy="91" r="4" fill="#fff"/><circle cx="125" cy="91" r="4" fill="#fff"/><ellipse cx="100" cy="113" rx="10" ry="7" fill="#FF9600"/></svg>
+      </div>
+      <div class="ph-info">
+        <div class="ph-name">${S.name}</div>
+        <div class="ph-rank">
+          <svg class="rank-star" viewBox="0 0 24 24" fill="${cur.col}"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          ${cur.n}
+        </div>
+      </div>
+    </div>
+    <div class="prof-stats">
+      <div class="ps-card"><div class="ps-val">${S.xp}</div><div class="ps-lbl">Total XP</div></div>
+      <div class="ps-card"><div class="ps-val">${S.doneNodes.size}/${totalNodes}</div><div class="ps-lbl">Lessons Done</div></div>
+      <div class="ps-card"><div class="ps-val">${S.streak}</div><div class="ps-lbl">Day Streak</div></div>
+      <div class="ps-card"><div class="ps-val">${S.hearts}</div><div class="ps-lbl">Hearts</div></div>
+      <div class="ps-card"><div class="ps-val">${S.unlockedAch.size}</div><div class="ps-lbl">Badges</div></div>
+      <div class="ps-card"><div class="ps-val">${pct}%</div><div class="ps-lbl">Rank Progress</div></div>
+    </div>
+    <div class="prof-cal"><div class="pc-ttl">Activity — Last 28 Days</div><div class="cal-grid">${cal}</div></div>
+    <div class="rank-ladder"><div class="rl-ttl">Rank Ladder</div>${ladderHtml}</div>
+  `;
+}
+
+// ──────────────────────────────────────────────────────────────────────
+// XP POP ANIMATION
+// ──────────────────────────────────────────────────────────────────────
+function showXPPop(amount, anchorEl){
+  const el=document.createElement('div');
+  el.className='xp-pop';
+  el.textContent='+'+amount+' XP';
+  const rect=anchorEl?anchorEl.getBoundingClientRect():{left:window.innerWidth/2,top:window.innerHeight*.4};
+  el.style.left=(rect.left+(rect.width||0)/2-30)+'px';
+  el.style.top=(rect.top-10)+'px';
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),1200);
+}
+
+// ──────────────────────────────────────────────────────────────────────
+// CONFETTI
+// ──────────────────────────────────────────────────────────────────────
+function confetti(){
+  const cols=['#58CC02','#FFD900','#1CB0F6','#CE82FF','#FF9600','#FF4B4B'];
+  for(let i=0;i<30;i++){
+    const el=document.createElement('div');el.className='cf';
+    const sz=Math.random()*12+7;
+    el.style.cssText=`width:${sz}px;height:${sz}px;background:${cols[i%6]};left:${Math.random()*100}vw;bottom:8%;border-radius:${Math.random()>.5?'50%':'3px'};animation-delay:${Math.random()*.8}s;animation-duration:${Math.random()*.6+1}s`;
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),2200);
+  }
+}
+
+// ──────────────────────────────────────────────────────────────────────
+// INIT — auto-resume if saved state exists
+// ──────────────────────────────────────────────────────────────────────
+(function init(){
+  // Register service worker for offline / PWA
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  }
+  if(!tryAutoResume()) prefillSplash();
+})();
+</script>
+</body>
+</html>
