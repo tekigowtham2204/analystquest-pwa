@@ -108,8 +108,23 @@ html,body{height:100%;overflow:hidden;background:#131f2e;font-family:'Nunito',sa
 
 .node-btn{width:70px;height:70px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;position:relative;transition:transform .12s;flex-shrink:0;will-change:transform;}
 .node-btn:active{transform:scale(.93)}
-.node-paused{box-shadow:0 0 0 4px #fff,0 0 0 8px var(--y),0 8px 16px rgba(255,217,0,.4)!important;animation:pulseNode 2s infinite}
+.node-paused{box-shadow:0 0 0 4px var(--bg),0 0 0 8px var(--y),0 8px 16px rgba(255,217,0,.4)!important;animation:pulseNode 2s infinite}
 @keyframes pulseNode{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+@keyframes bounceTool{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,-5px)}}
+
+@media(prefers-color-scheme: dark) {
+  :root {
+    --bg: #111b27;
+    --br: #28394d;
+    --tx: #e8e8e8;
+    --tm: #a9bed1;
+    --tl: #728a9e;
+  }
+  body, #app, .sc, #s-splash, .topbar, .xp-bar-wrap, .tabs, .guide-btn, .btn-out, .nmdl-box, .pq-box {
+    background: var(--bg) !important;
+  }
+  .sp-input { background: #1a293b !important; color: #fff !important; border-color: var(--br) !important; }
+}
 .node-btn .nb-ico{font-size:28px;line-height:1}
 .node-btn .nb-chk{position:absolute;bottom:-2px;right:-2px;width:22px;height:22px;border-radius:50%;background:var(--g);border:2.5px solid #fff;display:flex;align-items:center;justify-content:center}
 .node-btn .nb-lock{position:absolute;inset:0;border-radius:50%;background:rgba(0,0,0,.18);display:flex;align-items:center;justify-content:center}
@@ -581,15 +596,16 @@ const ACHS = [
   {id:'principal',ico:'👑',n:'Principal Analyst',d:'Reach 3800 XP',chk:s=>s.xp>=3800}
 ];
 
-const LB_PLAYERS = [
-  {n:'Arjun Sharma',xp:2840,ava:'A'},{n:'Priya Mehta',xp:2610,ava:'P'},
-  {n:'Rohan Gupta',xp:2380,ava:'R'},{n:'Sneha Iyer',xp:2150,ava:'S'},
-  {n:'Vikram Nair',xp:1920,ava:'V'},{n:'Ananya Das',xp:1700,ava:'A'},
-  {n:'Karthik Rao',xp:1480,ava:'K'},{n:'Divya Pillai',xp:1260,ava:'D'},
-  {n:'Aditya Kumar',xp:1040,ava:'A'},{n:'Neha Joshi',xp:820,ava:'N'},
-  {n:'Rahul Verma',xp:600,ava:'R'},{n:'Kavya Singh',xp:430,ava:'K'},
-  {n:'Siddharth M',xp:310,ava:'S'},{n:'Pooja Reddy',xp:180,ava:'P'}
-];
+const LB_PLAYERS = (function(){
+  const days = Math.floor(Date.now() / 86400000) - 19800; // Time seed
+  const names = ['Arjun Sharma','Priya Mehta','Rohan Gupta','Sneha Iyer','Vikram Nair','Ananya Das','Karthik Rao','Divya Pillai','Aditya Kumar','Neha Joshi','Rahul Verma','Kavya Singh','Siddharth M','Pooja Reddy'];
+  return names.map((n, i) => {
+    const base = (names.length - i) * 150;
+    const dailyGrowth = 25 - i;
+    const noise = Math.floor(Math.sin(days + i) * 50);
+    return { n, xp: Math.max(0, base + (days * dailyGrowth) + noise), ava: n[0] };
+  });
+})();
 
 // ──────────────────────────────────────────────────────────────────────
 // STATE
@@ -823,8 +839,12 @@ function renderLearn(){
         let inner=done?`<div class="nb-ico">${node.ico}</div><div class="nb-chk"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>`
           :`<div class="nb-ico" style="${!unlocked?'filter:grayscale(1) opacity(.4)':''}">  ${node.ico}</div>${!unlocked?'<div class="nb-lock"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.8)" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>':''}`;
         const clickFn=unlocked?`openNodeModal('${node.id}',${ui})`:'';
+        const showTooltip = (nodeGlobalIdx === 0 && S.doneNodes.size === 0);
+        const tooltipHTML = showTooltip ? `<div style="position:absolute; bottom:100%; left:50%; transform:translateX(-50%); background:var(--g); color:#fff; padding:6px 14px; border-radius:12px; font-weight:900; font-size:12px; white-space:nowrap; animation:bounceTool 1s infinite; z-index:10; box-shadow:0 6px 12px rgba(0,0,0,0.2); pointer-events:none;">START HERE<div style="position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--g);"></div></div>` : '';
+
         html+=`<div class="node-row ${posClass}">
-          <div style="display:flex;flex-direction:column;align-items:center;gap:0">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:0;position:relative;">
+            ${tooltipHTML}
             <button id="node-btn-${node.id}" class="node-btn ${btnClass}" ${clickFn?`onclick="${clickFn}"`:''}>${inner}</button>
             <div class="nb-lbl">${node.lbl}</div>
           </div>
