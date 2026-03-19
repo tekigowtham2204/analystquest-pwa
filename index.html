@@ -30,6 +30,9 @@
   --p:#CE82FF;--pd:#B05FE8;--pl:#F5E8FF;
   --tx:#3C3C3C;--tm:#777;--tl:#AFAFAF;
   --br:#E5E5E5;--bg:#F7F7F7;
+  --pmcq-bg:#DDF4FF; --pmcq-c:#006eb3; --ptf-bg:#D7FFB8; --ptf-c:#2e7d00;
+  --pbl-bg:#FFF0D9; --pbl-c:#a05800; --pma-bg:#F5E8FF; --pma-c:#7700bb;
+  --por-bg:#FFE0E0; --por-c:#c00000;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased}
 html,body{height:100%;overflow:hidden;background:#131f2e;font-family:'Nunito',sans-serif;color:var(--tx)}
@@ -119,6 +122,9 @@ html,body{height:100%;overflow:hidden;background:#131f2e;font-family:'Nunito',sa
     --tx: #e8e8e8;
     --tm: #a9bed1;
     --tl: #728a9e;
+    --pmcq-bg: #1a364d; --pmcq-c: #58b0e3; --ptf-bg: #264219; --ptf-c: #78c44b;
+    --pbl-bg: #4a3311; --pbl-c: #e6a235; --pma-bg: #3c244d; --pma-c: #b97de8;
+    --por-bg: #4f1d1d; --por-c: #e85656;
   }
   body, #app, .sc, #s-splash, .topbar, .xp-bar-wrap, .tabs, .guide-btn, .btn-out, .nmdl-box, .pq-box {
     background: var(--bg) !important;
@@ -794,7 +800,7 @@ function updateXPBar(){
 // ──────────────────────────────────────────────────────────────────────
 // LEARN TAB
 // ──────────────────────────────────────────────────────────────────────
-const QT_PILLS={mcq:{lbl:'Multiple Choice',bg:'#DDF4FF',col:'#006eb3'},tf:{lbl:'True / False',bg:'#D7FFB8',col:'#2e7d00'},blank:{lbl:'Fill in Blank',bg:'#FFF0D9',col:'#a05800'},match:{lbl:'Match Pairs',bg:'#F5E8FF',col:'#7700bb'},order:{lbl:'Arrange',bg:'#FFE0E0',col:'#c00000'}};
+const QT_PILLS={mcq:{lbl:'Multiple Choice',bg:'var(--pmcq-bg)',col:'var(--pmcq-c)'},tf:{lbl:'True / False',bg:'var(--ptf-bg)',col:'var(--ptf-c)'},blank:{lbl:'Fill in Blank',bg:'var(--pbl-bg)',col:'var(--pbl-c)'},match:{lbl:'Match Pairs',bg:'var(--pma-bg)',col:'var(--pma-c)'},order:{lbl:'Arrange',bg:'var(--por-bg)',col:'var(--por-c)'}};
 
 function renderLearn(){
   const cont=document.getElementById('tab-learn');
@@ -840,7 +846,7 @@ function renderLearn(){
           :`<div class="nb-ico" style="${!unlocked?'filter:grayscale(1) opacity(.4)':''}">  ${node.ico}</div>${!unlocked?'<div class="nb-lock"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.8)" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>':''}`;
         const clickFn=unlocked?`openNodeModal('${node.id}',${ui})`:'';
         const showTooltip = (nodeGlobalIdx === 0 && S.doneNodes.size === 0);
-        const tooltipHTML = showTooltip ? `<div style="position:absolute; bottom:100%; left:50%; transform:translateX(-50%); background:var(--g); color:#fff; padding:6px 14px; border-radius:12px; font-weight:900; font-size:12px; white-space:nowrap; animation:bounceTool 1s infinite; z-index:10; box-shadow:0 6px 12px rgba(0,0,0,0.2); pointer-events:none;">START HERE<div style="position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--g);"></div></div>` : '';
+        const tooltipHTML = showTooltip ? `<div style="position:absolute; bottom:100%; left:50%; transform:translate3d(-50%,0,0); will-change:transform; background:var(--g); color:#fff; padding:6px 14px; border-radius:12px; font-weight:900; font-size:12px; white-space:nowrap; animation:bounceTool 1s infinite; z-index:10; box-shadow:0 6px 12px rgba(0,0,0,0.2); pointer-events:none;">START HERE<div style="position:absolute;top:100%;left:50%;transform:translate3d(-50%,0,0);border:6px solid transparent;border-top-color:var(--g);"></div></div>` : '';
 
         html+=`<div class="node-row ${posClass}">
           <div style="display:flex;flex-direction:column;align-items:center;gap:0;position:relative;">
