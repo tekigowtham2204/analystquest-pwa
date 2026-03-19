@@ -694,12 +694,11 @@ function tryAutoResume(){
     checkStreak();
     saveS();
     if(S._lsData){
-      resumeLesson(S._lsData);
+      window._savedLS = S._lsData;
       delete S._lsData;
-    } else {
-      show('s-main');
-      switchTab(0);
     }
+    show('s-main');
+    switchTab(0);
     return true;
   }catch(e){return false;}
 }
@@ -893,7 +892,11 @@ function openNodeModal(nodeId,ui){
     return `<span class="qt-pill" style="background:${p.bg};color:${p.col};">${p.lbl}</span>`;
   }).join('');
   const done=S.doneNodes.has(nodeId);
-  $e('nm-start').textContent=done?'PRACTICE AGAIN':'START LESSON';
+  if(window._savedLS && window._savedLS.nodeId === nodeId) {
+    $e('nm-start').textContent='RESUME PROGRESS';
+  } else {
+    $e('nm-start').textContent=done?'PRACTICE AGAIN':'START LESSON';
+  }
   show('s-nmodal');
 }
 function closeNModal(e){
@@ -905,6 +908,12 @@ function closeNModal(e){
 // ──────────────────────────────────────────────────────────────────────
 function startLesson(){
   if(!LS.node)return;
+  if(window._savedLS && window._savedLS.nodeId === LS.node.id){
+    const d = window._savedLS;
+    window._savedLS = null;
+    return resumeLesson(d);
+  }
+  window._savedLS = null;
   show('s-lesson');
   LS.queue=[...LS.node.qs.map((_,i)=>i)];
   LS.pos=0; LS.mastered=new Set(); LS.attempts={};
