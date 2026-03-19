@@ -17,6 +17,8 @@
 <meta name="apple-mobile-web-app-title" content="AnalystQuest">
 <link rel="apple-touch-icon" href="icon-192.png">
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -34,7 +36,7 @@ html,body{height:100%;overflow:hidden;background:#131f2e;font-family:'Nunito',sa
 #app{position:fixed;top:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;height:100%;background:#fff;overflow:hidden;display:flex;flex-direction:column}
 
 /* SCREENS */
-.sc{position:absolute;inset:0;display:flex;flex-direction:column;background:#fff;opacity:0;pointer-events:none;transition:opacity .15s;z-index:1}
+.sc{position:absolute;inset:0;display:flex;flex-direction:column;background:#fff;opacity:0;pointer-events:none;transition:opacity .15s;z-index:1;will-change:opacity,transform;transform:translateZ(0);}
 .sc.on{opacity:1;pointer-events:all;z-index:10}
 
 /* ── SPLASH ── */
@@ -97,14 +99,14 @@ html,body{height:100%;overflow:hidden;background:#131f2e;font-family:'Nunito',sa
 .sec-name{font-size:15px;font-weight:900;line-height:1.25}
 .guide-btn{padding:7px 14px;border-radius:20px;border:2px solid;font-family:'Nunito',sans-serif;font-size:12px;font-weight:900;cursor:pointer;background:#fff;flex-shrink:0}
 
-.path{padding:10px 0 20px;position:relative}
+.path{padding:10px 0 20px;position:relative;content-visibility:auto;contain-intrinsic-size:600px;}
 .path::before{content:'';position:absolute;left:50%;top:0;bottom:0;width:2px;background:var(--br);transform:translateX(-50%);z-index:0}
 
 .node-row{display:flex;justify-content:center;padding:6px 0;position:relative;z-index:1}
 .node-row.left{justify-content:flex-start;padding-left:60px}
 .node-row.right{justify-content:flex-end;padding-right:60px}
 
-.node-btn{width:70px;height:70px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;position:relative;transition:transform .12s;flex-shrink:0}
+.node-btn{width:70px;height:70px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;position:relative;transition:transform .12s;flex-shrink:0;will-change:transform;}
 .node-btn:active{transform:scale(.93)}
 .node-btn .nb-ico{font-size:28px;line-height:1}
 .node-btn .nb-chk{position:absolute;bottom:-2px;right:-2px;width:22px;height:22px;border-radius:50%;background:var(--g);border:2.5px solid #fff;display:flex;align-items:center;justify-content:center}
