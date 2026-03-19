@@ -2,7 +2,7 @@
   "name": "AnalystQuest",
   "short_name": "AnalystQuest",
   "description": "Master Product Analytics — from complete beginner to Principal Analyst",
-  "start_url": "/",
+  "start_url": ".",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#131f2e",
